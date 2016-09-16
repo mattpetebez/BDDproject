@@ -77,7 +77,7 @@ bool BDD::makeBDD(string& rule)
             }
             else if( rule.at(i) == '1')
             {
-                //INSERT CODE HERE BALLS AND DICK
+                //INSERT CODE HERE BALLS AND DICK AND VAGINA AND BOOBS HOGWITS FOR LIFE
             }
         }
         return true;
