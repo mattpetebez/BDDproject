@@ -77,7 +77,7 @@ bool BDD::makeBDD(string& rule)
             }
             else if( rule.at(i) == '1')
             {
-                //INSERT CODE HERE
+                //INSERT CODE HERE BALLS AND DICK
             }
         }
         return true;
