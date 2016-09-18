@@ -1,0 +1,24 @@
+<filter name='larry-rules' chain='root'>
+  <uuid>fd783135-f053-475e-85a5-d90e3eff9c6e</uuid>
+  <rule action='accept' direction='in' priority='500'>
+    <tcp dstportstart='22'/>
+  </rule>
+  <rule action='accept' direction='out' priority='500'>
+    <tcp dstportstart='22'/>
+  </rule>
+  <rule action='accept' direction='in' priority='500'>
+    <tcp dstportstart='80'/>
+  </rule>
+  <rule action='accept' direction='out' priority='500'>
+    <tcp dstportstart='80'/>
+  </rule>
+  <rule action='accept' direction='in' priority='500'/>
+  <rule action='accept' direction='out' priority='500'/>
+
+ <rule action='accept' direction='in' priority='200'>
+<tcp dstportstart='80'/>
+ </rule>
+ <rule action='accept' direction='in' priority='200'>
+<tcp dstportstart='80'/>
+ </rule>
+</filter>
