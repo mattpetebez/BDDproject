@@ -8,29 +8,29 @@ int main(int argc, char **argv)
 	
 	string user,password,sourceip,destip,sourceport,destport,inout,protocol,priority,acceptreject;
 /*	cout<<"Please enter User"<< endl;
-	cin >> user;*/
+	cin >> user;/
 /*	cout<<"Please enter Source IP address"<< endl;
 	cin >> sourceip;*/
 /*	cout<<"Please enter Destination IP address"<< endl;
 	cin >> destip;*/
 /*	cout<<"Please enter Source Port"<< endl;
 	cin >> sourceport;*/
-/*	cout<<"Please enter Destination Port"<< endl;
+	cout<<"Please enter Destination Port"<< endl;
 	cin >> destport;
 	cout<<"Please enter Protocol"<< endl;
 	cin >> protocol;
 	cout<<"Please enter whether the traffic is incoming or outgoing or both"<< endl;
 	cin >> inout;
 	cout<<"Please enter the rule's Priority"<< endl;
-	cin >> protocol;
+	cin >> priority;
 	cout<<"Please enter if the traffic must be accepted or rejected"<< endl;
-	cin >> acceptreject;*/
-	string filelocation ="/home/tyron/Documents/BDD/RuleInserter/larry-rules.xml";
+	cin >> acceptreject;
+	/*string filelocation ="/home/tyron/Documents/BDD/RuleInserter/larry-rules.xml";
 	acceptreject ="accept";
 	inout ="in";
 	protocol = "tcp";
 	destport = "80";
-	priority ="200";
+	priority ="200";*/
 	string ruleaction = " <rule action=";
 	string singlequote = "'";
 	string prior = " priority=";
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	string existingrules;
 	string newrules;
 	ifstream infile;
-	infile.open ("/home/tyron/Documents/BDD/RuleInserter/larry-rules.xml");
+	infile.open ("/home/matt/Larry-rules.xml");
         while(getline(infile,existingrules)) // To get you all the lines.
         { // Saves the line in STRING.
 			if(existingrules!="</filter>")
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
   
 	newrules = newrules+xmlrule+nextline+filter;
 	//cout << newrules;
-    ofstream myfile ("/home/tyron/Documents/BDD/RuleInserter/larry-rules.xml");
+    ofstream myfile ("/home/matt/Larry-rules.xml");
 	if (myfile.is_open())
 	{
 		myfile << newrules;
