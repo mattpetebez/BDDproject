@@ -1,10 +1,10 @@
 #!/bin/bash
 
-virsh dumpxml Larry-rules.xml /home/matt
+virsh nwfilter-dumpxml < /home/matt/Larry-rules.xml
 virsh shutdown Larry acpi
-sleep 7
+sleep 15
 virsh nwfilter-undefine Larry-rules
-/home/matt/BDDproject/RuleInserter/a.out
+/home/BDDproject/RuleInserter/parser
 virsh nwfilter-define /home/matt/Larry-rules.xml
 virsh start Larry 
 
