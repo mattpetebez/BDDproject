@@ -7,100 +7,43 @@ using namespace std;
 #ifndef RULERETURNER_H
 #define RULERETURNER_H
 
+#define NO_BITS_IN_RULE 104
+
 struct BDDit
 {
+    BDDit();
     int compCount = 0;
     DdNode * curr;
-    string rule = "";
+    string rule;
     void setCurr(DdNode* _curr);
-    void appendRule(string _rule);
+    void appendRule(char _rule);
     bool isPenultimateNode();
     bool hasTwoChildren();
     bool constThenChild();
     bool constElseChild();
     
     bool compIsOdd();
-        
+    
+    BDDit &operator=(const BDDit &aBDDit);
     DdNode * returnElseChild();
     DdNode * returnThenChild();
     
     string returnWholeRule();
 };
 
-
-bool BDDit::isPenultimateNode()
-{
-    if(Cudd_IsConstant(Cudd_E(curr)) && Cudd_IsConstant(Cudd_T(curr)))
-    {
-        return true;
-    }
-    
-    else return false;
-}
-
-bool BDDit::hasTwoChildren()
-{
-    if(!Cudd_IsConstant(Cudd_E(curr)) && !Cudd_IsConstant(Cudd_T(curr)))
-    {
-        return true;
-    }
-    else return false;
-}
-bool BDDit::constThenChild()
-{
-    if (Cudd_IsConstant(Cudd_T(curr)) && !Cudd_IsConstant(Cudd_E(curr)))
-    {
-        return true;
-    }
-    else return false;
-}
-
-bool BDDit::constElseChild()
-{
-    if (Cudd_IsConstant(Cudd_E(curr)) && !Cudd_IsConstant(Cudd_T(curr)))
-    {
-        return true;
-    }
-    else return false;
-}
-
-bool BDDit::compIsOdd()
-{
-    if ((compCount%2) == 0)
-    {
-        return false;
-    }
-    else return true;
-}
-DdNode* BDDit::returnElseChild()
-{
-    return Cudd_E(curr);
-}
-
-DdNode* BDDit::returnThenChild()
-{
-    return Cudd_T(curr);
-}
-
-string BDDit::returnWholeRule()
-{
-    return rule;
-}
-
-void BDDit::appendRule(string _rule)
-{
-    rule += _rule;
-}
 class RuleReturner
 {
-    RuleReturner();
+public:
+    RuleReturner(DdNode* head);
     ~RuleReturner();
-    void findBddRules(DdNode * node);
-    
-    
+    void startRuleReturn();
+    void findBddRules(BDDit tracker);
+    bool validNoRules();
+    vector <string> returnRules();
 private:
     DdNode * current;
     vector<string> rules;
+    BDDit iter;
 };
 
 #endif // RULERETURNER_H
