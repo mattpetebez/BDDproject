@@ -95,6 +95,7 @@ void RuleReturner::findBddRules(BDDit tracker)
 bool RuleReturner::validNoRules()
 {
     int numRules = Cudd_CountPathsToNonZero(current);
+    cout << "Number of rules: " << numRules << endl;
     int calcNumRules = rules.size();
     if (numRules == calcNumRules)
     {

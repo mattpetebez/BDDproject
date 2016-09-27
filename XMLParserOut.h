@@ -8,6 +8,8 @@ class XMLParserOut
 {
 public:
     XMLParserOut();
+    void setRules();
+    void orderByIPDesc();
     ~XMLParserOut();
 
 };

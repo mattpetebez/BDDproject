@@ -7,7 +7,7 @@ using namespace std;
 #ifndef RULERETURNER_H
 #define RULERETURNER_H
 
-#define NO_BITS_IN_RULE 104
+#define NO_BITS_IN_RULE 9
 
 struct BDDit
 {

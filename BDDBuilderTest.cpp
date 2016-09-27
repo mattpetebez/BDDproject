@@ -7,9 +7,9 @@ using namespace std;
 
 int main()
 {
-    string rule1 = "012222010";
-    string rule2 = "101010122";
-    string rule3 = "222011100";
+    string rule1 = "000101010";
+    string rule2 = "101010101";
+    string rule3 = "101111001";
     
     vector<string> testRules;
     
@@ -25,7 +25,10 @@ int main()
     string lekker = "Lekker2";
     bddbuilder.printBDD(lekker);
     cout << rulereturner.validNoRules() << endl;
+    cout << rulereturner.returnRules()[0] << endl;
+    cout << rulereturner.returnRules()[1] << endl;
     cout << rulereturner.returnRules()[2] << endl;
+    
     
     
     return 0;
