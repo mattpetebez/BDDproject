@@ -16,7 +16,7 @@ public:
     BDDBuilder(vector<string>& binRules);
     void buildBDD();
     ~BDDBuilder();
-    void printBDD();
+    void printBDD(string& filename);
     DdNode* returnHead();
 private:
     int inRuleCount;

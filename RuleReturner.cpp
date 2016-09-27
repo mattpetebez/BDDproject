@@ -3,7 +3,7 @@
 RuleReturner::RuleReturner(DdNode* head)
 {
     iter.setCurr(head);
-    cout << Cudd_NodeReadIndex(head) << endl;
+//    cout << Cudd_NodeReadIndex(head) << endl;
     current = head;
 }
 
@@ -33,7 +33,10 @@ void RuleReturner::findBddRules(BDDit tracker)
             tracker.appendRule(zero);
         }
         
-        else tracker.appendRule(one);
+        else 
+        {
+            tracker.appendRule(one);
+        }
         rules.push_back(tracker.returnWholeRule());
         return;
     }
@@ -56,7 +59,6 @@ void RuleReturner::findBddRules(BDDit tracker)
         else if(!tracker.constThenChild() && !tracker.constElseChild())//split
         {
             BDDit branchTracker = tracker;
-            //Need to find a way to pass in complement count.
             branchTracker.appendRule(zero);
             branchTracker.setCurr(tracker.returnElseChild());
             
@@ -69,12 +71,6 @@ void RuleReturner::findBddRules(BDDit tracker)
         
         else if (tracker.constElseChild() && !tracker.compIsOdd() && !tracker.constThenChild())
         {
-            //string action = Cudd_V(tracker.returnElseChild());
-            BDDit branchTracker = tracker;
-            //branchTracker.appendRule(tracker.returnWholeRule());
-            branchTracker.appendRule(zero);
-            rules.push_back(branchTracker.returnWholeRule());
-            
             tracker.appendRule(one);
             tracker.setCurr(tracker.returnThenChild());
             
@@ -84,7 +80,6 @@ void RuleReturner::findBddRules(BDDit tracker)
         else if (tracker.constThenChild() && !tracker.compIsOdd() && !tracker.constElseChild())
         {
             BDDit branchTracker = tracker;
-            //branchTracker.appendRule(tracker.returnWholeRule());
             branchTracker.appendRule(one);
             rules.push_back(branchTracker.returnWholeRule());
             
@@ -101,7 +96,6 @@ bool RuleReturner::validNoRules()
 {
     int numRules = Cudd_CountPathsToNonZero(current);
     int calcNumRules = rules.size();
-    
     if (numRules == calcNumRules)
     {
         return true;
@@ -128,7 +122,6 @@ BDDit &BDDit::operator=(const BDDit &aBDDit)
 void BDDit::setCurr(DdNode* _curr)
 {
     curr = _curr;
-//    cout << Cudd_NodeReadIndex(curr) << endl;
     if(Cudd_IsComplement(curr))
     {
         compCount++;
@@ -197,5 +190,4 @@ string BDDit::returnWholeRule()
 void BDDit::appendRule(char _rule)
 {
     rule.at(Cudd_NodeReadIndex(curr)) = _rule;
-//    cout << Cudd_NodeReadIndex(curr) << endl;
 }

@@ -72,9 +72,9 @@ void BDDBuilder::buildBDD()
         ++rulesIter;
     }
 }
-void BDDBuilder::printBDD()
+void BDDBuilder::printBDD(string& filename)
 {
-    BDDDiag = fopen("BDDBuilderTest","w");
+    BDDDiag = fopen("lekker2","w");
     Cudd_DumpDot(manager, 1, &mainBdd, NULL,NULL,BDDDiag);
 }
 

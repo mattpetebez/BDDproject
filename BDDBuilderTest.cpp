@@ -7,14 +7,14 @@ using namespace std;
 
 int main()
 {
-    string rule1 = "01012222222201222201";
-//    string rule2 = "11101010";
-    string rule3 = "10102222222210122220";
+    string rule1 = "012222010";
+    string rule2 = "101010122";
+    string rule3 = "222011100";
     
     vector<string> testRules;
     
     testRules.push_back(rule1);
-//    testRules.push_back(rule2);
+    testRules.push_back(rule2);
     testRules.push_back(rule3);
     
     BDDBuilder bddbuilder(testRules);
@@ -22,10 +22,10 @@ int main()
     
     RuleReturner rulereturner(bddbuilder.returnHead());
     rulereturner.startRuleReturn();
-    
-    bddbuilder.printBDD();
+    string lekker = "Lekker2";
+    bddbuilder.printBDD(lekker);
     cout << rulereturner.validNoRules() << endl;
-    cout << rulereturner.returnRules()[0] << endl;
+    cout << rulereturner.returnRules()[2] << endl;
     
     
     return 0;
