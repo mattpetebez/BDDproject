@@ -1,0 +1,21 @@
+<rule action='accept' direction='100''
+<tcp dstportstart='80'
+</rule>
+<rule action='accept' direction='in''
+<tcp dstportstart='80'
+</rule>
+<rule action='' direction='''
+<tcp dstportstart=''
+</rule>
+<rule action='' direction='''
+<tcp dstportstart=''
+</rule>
+<rule action='' direction='''
+<tcp dstportstart=''
+</rule>
+<rule action='accept' direction='in''
+<tcp dstportstart='80'
+</rule>
+<rule action='' direction='''
+<tcp dstportstart=''
+</rule>

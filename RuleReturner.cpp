@@ -28,16 +28,23 @@ void RuleReturner::findBddRules(BDDit tracker)
     
     if(tracker.isPenultimateNode())
     {
+		
         if(tracker.compIsOdd())
         {
             tracker.appendRule(zero);
         }
         
+<<<<<<< Updated upstream
         else 
         {
             tracker.appendRule(one);
         }
         rules.push_back(tracker.returnWholeRule());
+=======
+        else tracker.appendRule(one);
+        
+		rules.push_back(tracker.returnWholeRule());
+>>>>>>> Stashed changes
         return;
     }
     else
@@ -71,6 +78,12 @@ void RuleReturner::findBddRules(BDDit tracker)
         
         else if (tracker.constElseChild() && !tracker.compIsOdd() && !tracker.constThenChild())
         {
+<<<<<<< Updated upstream
+=======
+            //string action = Cudd_V(tracker.returnElseChild());
+            BDDit branchTracker = tracker;
+            
+>>>>>>> Stashed changes
             tracker.appendRule(one);
             tracker.setCurr(tracker.returnThenChild());
             
@@ -191,4 +204,8 @@ string BDDit::returnWholeRule()
 void BDDit::appendRule(char _rule)
 {
     rule.at(Cudd_NodeReadIndex(curr)) = _rule;
+<<<<<<< Updated upstream
+=======
+   // cout << Cudd_NodeReadIndex(curr) << endl;
+>>>>>>> Stashed changes
 }

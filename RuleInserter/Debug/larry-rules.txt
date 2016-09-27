@@ -1,0 +1,10 @@
+<rule action='reject' direction='in''
+<tcp dstportstart='80'
+</rule>
+<rule action='accept' direction='in''
+<tcp dstportstart=''
+</rule>
+<rule action='accept' direction='in''
+<tcp dstportstart='80'
+</rule>
+ more lorem ipsum more lorem ipsum more lorem ipsum
