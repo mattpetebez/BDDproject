@@ -1,4 +1,4 @@
-<filter name='strict-rules' chain='root'>
+<filter name='strict-S' chain='root'>
   <uuid>cbf0e4db-22b8-40b2-ab54-91003332461d</uuid>
   <rule action='accept' direction='in' priority='400'>
     <tcp srcipaddr='146.141.177.27' srcipmask='24'/>
@@ -9,6 +9,7 @@
   <rule action='accept' direction='in' priority='400'>
     <tcp srcipaddr='105.227.134.158' srcipmask='8' dstportstart='80'/>
   </rule>
+
   <rule action='accept' direction='in' priority='400'>
     <tcp srcipaddr='196.44.24.27' srcipmask='16' dstportstart='80'/>
   </rule>
@@ -96,6 +97,7 @@
   <rule action='drop' direction='in' priority='480'>
     <tcp dstportstart='3389'/>
   </rule>
+
   <rule action='drop' direction='in' priority='490'>
     <all/>
   </rule>

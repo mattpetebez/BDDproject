@@ -1,6 +1,6 @@
 #include "XMLParserOut.h"
 
-XMLParserOut::XMLParserOut(Direction _direction Accept_Deny _accept_deny)
+XMLParserOut::XMLParserOut(Direction _direction, Accept_Deny _accept_deny)
 {
     direction   = _direction;
     accept_deny = _accept_deny;
@@ -55,7 +55,16 @@ void XMLParserOut::buildGroupRules()
     {
         binDecConverter converter;
         string prot = (*iter).substr(0,8);
+        if(prot = "22222222")
+        {
+            prot = "00000000";
+        }
         string srcPort = (*iter).substr(8,16);
+        if(srcPort = "2222222222222222")
+        {
+            srcPort = "00000000"; //then later in rule creater we check were its zero and make it blank. nwfilter will remove it automatically.
+            //coming now
+        }
         string destPort = (*iter).substr(24, 16);
         string ip1 = (*iter).substr(40, 8);
         string ip2 = (*iter).substr(48, 8);
@@ -68,12 +77,12 @@ void XMLParserOut::buildGroupRules()
     }
 }
 
-vector<string> XMLParserOut::outputRule(Direction _direction, Accept_Deny _accept_deny)
+vector<string> XMLParserOut::ruleCreater()
 {
     string wholerule = "";
 
     string ruleaction = "<rule action=";
-    if(_accept_deny == Accept_Deny::accept)
+    if(accept_deny == Accept_Deny::accept)
     {
         ruleaction += "'accept' ";
     }
@@ -81,10 +90,10 @@ vector<string> XMLParserOut::outputRule(Direction _direction, Accept_Deny _accep
     
 	string priority = " priority='500'";
     
-	string direction = "direction=";
-    if(_direction == Direction::in)
-    direction += "'in'";
-    else direction += "'out'";
+	string direct = "direction=";
+    if(direction == Direction::in)
+    direct += "'in'";
+    else direct += "'out'";
 
 	string endrule= "</rule>";
     string srcip = " srcipaddr=";
@@ -110,7 +119,7 @@ vector<string> XMLParserOut::outputRule(Direction _direction, Accept_Deny _accep
     {
         GroupedRule currRule = (*iter);
         ip = currRule.returnWholeIP();
-        if(_direction == Direction::in)
+        if(direction == Direction::in)
         {
             ip = srcip + ip;
         }
@@ -125,7 +134,7 @@ vector<string> XMLParserOut::outputRule(Direction _direction, Accept_Deny _accep
         string sourceportstart = currRule.returnSrcPort();
         string sourceportend = sourceportstart;//no range implementation yet
         
-        wholerule = ruleaction+direction+priority+">\n<"+protocol+ip+dstportstart+destportstart
+        wholerule = ruleaction+direct+priority+">\n<"+protocol+ip+dstportstart+destportstart
         +dstportend+destportend+srcportstart+sourceportstart+srcportend+sourceportend+"/"+">\n"+endrule;
         xmlrules.push_back(wholerule);
         
@@ -135,14 +144,6 @@ vector<string> XMLParserOut::outputRule(Direction _direction, Accept_Deny _accep
     return xmlrules;
 } 
 
-string XMLParserOut::wholeRuleBuilder(vector<GroupedRule>::iterator _iter)
-{
-    string rule = "<rule action=";
-    
-    GroupedRule curr = *iter;
-    
-    if(curr.)
-}
 /*void XMLParserOut::printOutputrules()
 {
     

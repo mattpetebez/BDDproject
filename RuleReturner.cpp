@@ -3,7 +3,6 @@
 RuleReturner::RuleReturner(DdNode* head)
 {
     iter.setCurr(head);
-//    cout << Cudd_NodeReadIndex(head) << endl;
     current = head;
 }
 

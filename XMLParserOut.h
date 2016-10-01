@@ -27,7 +27,7 @@ enum class Protocol
 };
 struct GroupedRule
 {
-    GroupedRule(int _prot,int _srcPort,int _destPort,int _ip1,int _ip2,int _ip3, int _ip4, Direction _direction, Accept_Deny _accept_deny);
+    GroupedRule(int _prot,int _srcPort,int _destPort,int _ip1,int _ip2,int _ip3, int _ip4);
     string returnProt();
     string returnSrcPort();
     string returnDestPort();
@@ -51,18 +51,17 @@ struct GroupedRule
 class XMLParserOut
 {
 public:
-    XMLParserOut(Direction _direction Accept_Deny _accept_deny);
+    XMLParserOut(Direction _direction, Accept_Deny _accept_deny);
     void setRules(vector<string>& _rules);
     void buildGroupRules();
     void orderByIPDesc();
-    vector<string> outputRule(Direction _direction, Accept_Deny _accept_deny);
+    vector<string> ruleCreater();
     void printoutputRule();
 
     ~XMLParserOut();
     string BinToDec();
     
 private:
-    string wholeRuleBuilder(vector<GroupedRule>::iterator _iter);
     vector<string> rules;
     vector<string> xmlrules;
     vector<GroupedRule> groupedRules;
