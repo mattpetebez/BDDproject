@@ -25,28 +25,6 @@ string XMLParserOut::BinToDec()
     return "something";
 }
 
-
-GroupedRule::GroupedRule(int _prot,int _srcPort,int _destPort,int _ip1,int _ip2 ,int _ip3, int _ip4)
-{
-/*    if(wholeRule.size() != 72)
-    {
-        cerr << "Shit's fucked with this rule yo." << endl;
-        return;
-    }
-    else
-    {
-       
-    }*/
-    
-    prot = _prot;
-    srcPort = _srcPort;
-    destPort = _destPort;
-    ip1 = _ip1;
-    ip2 = _ip2;
-    ip3 = _ip3;
-    ip4 = _ip4;
-}
-
 void XMLParserOut::buildGroupRules()
 {
     vector<string>::iterator iter = rules.begin();
@@ -109,7 +87,6 @@ vector<string> XMLParserOut::ruleCreater()
     /*
      *  <rule action='accept' direction='in' priority='400'>
         <tcp srcipaddr='196.44.24.27' dstipaddr='192.168.1.16' srcipmask='16' dstportstart='80' dstportend='100' srcportstart='80' srcportend='100'/>
-        part of seperate rule <udp dstportstart='53'/>
         </rule>
      * iprange ??
      */
@@ -143,67 +120,3 @@ vector<string> XMLParserOut::ruleCreater()
     
     return xmlrules;
 } 
-
-/*void XMLParserOut::printOutputrules()
-{
-    
-}*/
-string GroupedRule::returnProt()
-{
-    switch(prot)
-    {
-        case ((int)Protocol::tcp):
-        {
-            cout << "true you bitch" << endl;
-            return "tcp";
-            break;
-        }
-        case (int)Protocol::udp:
-        {
-            return "udp";
-            break;
-        }
-        case (int)Protocol::icmp:
-        {
-            return "icmp";
-            break;
-        }
-        default:
-        return "Switch isn't working you cunt";
-    }
-}
-
-string GroupedRule::returnSrcPort()
-{
-    return "'"+to_string(srcPort)+"'";
-}
-
-string GroupedRule::returnDestPort()
-{
-    return  "'"+to_string(destPort)+"'";
-}
-
-string GroupedRule::returnIp1()
-{
-    return to_string(ip1);
-}
-
-string GroupedRule::returnIp2()
-{
-    return to_string(ip2);
-}
-
-string GroupedRule::returnIp3()
-{
-    return to_string(ip3);
-}
-
-string GroupedRule::returnIp4()
-{
-    return to_string(ip4);
-}
-
-string GroupedRule::returnWholeIP()
-{
-    return "'"+returnIp1()+"."+returnIp2()+"."+returnIp3()+"."+returnIp4()+"'";
-}

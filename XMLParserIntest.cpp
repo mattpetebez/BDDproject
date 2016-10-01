@@ -8,5 +8,6 @@ int main()
     string filename = "/home/BDDproject/XMLRuleFormat";
     XMLParserIn parserIn(filename);
     parserIn.buildStringRules();
+    parserIn.buildBinRules();
     return 0;
 }
