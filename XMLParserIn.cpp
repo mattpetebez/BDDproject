@@ -4,7 +4,7 @@ BinGroupedRule::BinGroupedRule(Accept_Deny _accept_deny, int _priority, Directio
 {
     accept_deny = _accept_deny;
     direction = _direction;
-    priority = priority;
+    priority = _priority;
     binRule = _binRule;    
 }
 
@@ -34,6 +34,7 @@ void XMLParserIn::buildStringRules()
         while(getline(infile, line))
         {
             allRules += line;
+            //cout << line << endl;
         }
     }
 	infile.close();
@@ -47,12 +48,13 @@ void XMLParserIn::buildStringRules()
     while ((pos = allRules.find(ruleDelimiter)) != std::string::npos)
     {
     token = allRules.substr(0, pos);
-    cout << token << endl;
+
     allRules.erase(0, pos + ruleDelimiter.size());
     StringRules.push_back(token);
     }
     token = allRules.substr(0, pos);
-//    cout << token << endl;
+    StringRules.push_back(token);
+
     allRules.erase(0, pos + ruleDelimiter.size());
 }
 
@@ -61,15 +63,15 @@ void XMLParserIn::buildStringRules()
 void XMLParserIn::buildBinRules()
 {
     //For these rules, need action, direction, priority, protocol, dstipaddr, srcipaddr, srcportstart, srcportend, dstportstart, dstportend (srcmask?)
-    string priority;
-    string srcip;
-    string destip;
-    string srcport;
-    string destport;
-    
-    Direction direction;
     Accept_Deny accept_deny;
+    Direction direction;
+    string priority;
     Protocol protocol;
+    string ip;
+    string srcportstart;
+    string srcportend;
+    string destportstart;
+    string destportend;    
     
     vector<string>::iterator iter = StringRules.begin();
     
@@ -85,12 +87,12 @@ void XMLParserIn::buildBinRules()
         if(finder != string::npos)
         {
             accept_deny = Accept_Deny::accept;
-//            cout << "accept" << endl;
         }
-        else 
+        finder = currRule.find("drop");
+        if(finder != string::npos)
         {
+           // cout << "found a deny rule" << endl;
             accept_deny = Accept_Deny::deny;
-//            cout << "deny" << endl;
         }
 
         
@@ -99,18 +101,15 @@ void XMLParserIn::buildBinRules()
         if(finder != string::npos)
         {
             direction = Direction::in;
-//            cout << "direction in " << endl;
         }
         else
         {
          direction = Direction::out;
-//         cout << "direction out" << endl;
         }
         
         //Need to find priority:
         string priorityDeleter = "priority='";
         deleter(priorityDeleter,currRule,priority);
-//        cout<<priority<<endl;
         int intPriority = atoi(priority.c_str());
         
         //Need to find protocol:
@@ -135,27 +134,77 @@ void XMLParserIn::buildBinRules()
         }
         
         //Need to search for srcipaddress
+        if(direction == Direction::in)
+        {
         string srcIpDeleter = "srcipaddr='";
-        if(deleter(srcIpDeleter,currRule,srcip))
-        {
-            iptobin(srcip);
-//            cout << srcip <<endl;
+            if(deleter(srcIpDeleter,currRule,ip))
+            {
+                iptobin(ip);
+            }
         }
-        cout << currRule << endl;
+        
         //Need to search for dstipaddress
-        
-        string dstIpDeleter = "dstipaddr='";
-        if(deleter(dstIpDeleter,currRule,destip))
+        else if(direction == Direction::out)
         {
-            iptobin(destip);
-            cout << dstIpDeleter << " Lekker Man " << destip << endl;
+            //cout << "Found an out rule." << endl;
+            string dstIpDeleter = "dstipaddr='";
+            if(deleter(dstIpDeleter,currRule,ip))
+            {
+                iptobin(ip);
+            }
         }
-        cout << currRule << endl;
-        //Need to find source port:
         
-   /*     string srcPortDeleter = "srcport='";
-        if(de)
-        */
+        //Need to find source port end:
+        string srcPortDeleter = "srcportstart='";
+        if(deleter(srcPortDeleter, currRule, srcportstart))
+        {
+            int temp = atoi(srcportstart.c_str());
+            srcportstart = _decToBin.returnStr(temp, BIT_16);
+        }
+        
+        //Need to find source port end
+        srcPortDeleter = "srcportend='";
+        if(deleter(srcPortDeleter, currRule, srcportend))
+        {
+            int temp = atoi(srcportend.c_str());
+            srcportend = _decToBin.returnStr(temp, BIT_16);            
+        }
+        
+        //Need to find dstportstart
+        string dstPortDeleter = "dstportstart='";
+        
+        if(deleter(dstPortDeleter, currRule, destportstart))
+        {
+            int temp = atoi(destportstart.c_str());
+            destportstart = _decToBin.returnStr(temp, BIT_16);
+        }
+        
+        //Need to find dstportend
+        dstPortDeleter = "dstportend='";
+        if(deleter(dstPortDeleter, currRule, destportend))
+        {
+            int temp = atoi(destportend.c_str());
+            destportend = _decToBin.returnStr(temp, BIT_16);
+        }
+        
+        //Now need to check range: 4 ranges: srcip,dstip,srcport,dstport-> worry about it later
+        
+        //Determine whether rule belongs at inaccept, inreject, outaccept and outreject
+        
+        string wholeBinRule = "";
+        int intProt = (int)protocol;
+        wholeBinRule += (_decToBin.returnStr(intProt, BIT_8)) + srcportstart + destportstart + ip;
+        GroupedRule binRule(accept_deny, intPriority, direction, wholeBinRule);
+        if(direction == Direction::in)
+        {
+            inRules.push_back(binRule);
+        }
+        else
+        {
+           // cout << "Pushing back outrule." << endl;
+           // cout <<"intPriority: " << intPriority << endl;
+            outRules.push_back(binRule);
+        }
         ++iter;
     }
     
@@ -186,8 +235,61 @@ void XMLParserIn::iptobin(string &ip)
     {
         finder = ip.find(delimiter);
         int tmpDecIp =atoi(ip.substr(0, finder).c_str());
-        ipAsBin += _decToBin.returnStr(tmpDecIp, 8);
+        ipAsBin += _decToBin.returnStr(tmpDecIp, BIT_8);
         ip.erase(0, finder + delimiter.size());
     }
     ip = ipAsBin;
+}
+
+void XMLParserIn::sortBinGroupedRule()
+{
+    sortByPriority(inRules);
+    sortByPriority(outRules);
+}
+
+void XMLParserIn::sortByPriority(vector<GroupedRule>& rules)//Need to changed to grouped rule
+{
+    //implement insertion sort by reference
+    GroupedRule temp;
+    int j;
+    int limit = rules.size();
+    for(int i =0; i<limit; i++)
+    {
+        j=i;
+        while(j>0 && rules[j].returnPriority() < rules[j-1].returnPriority())
+        {
+            temp = rules[j];
+            rules[j]=rules[j-1];
+            rules[j-1]=temp;
+            j--;
+        }
+    }
+}
+
+int BinGroupedRule::returnPriority()
+{
+    return priority;
+}
+
+BinGroupedRule::BinGroupedRule(){
+    
+}
+
+void XMLParserIn::printRulesConsole()
+{
+    //cout << "input rules" << endl;
+    for(auto i: inRules)
+    {
+        cout << i.returnPriority() << endl;
+    }
+  //  cout << "output rules" << endl;
+    for (auto i : outRules)
+    {
+        cout << i.returnPriority() << endl;
+    }
+}
+
+vector<GroupedRule> XMLParserIn::returnInRules()
+{
+    return inRules;
 }

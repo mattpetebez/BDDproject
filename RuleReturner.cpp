@@ -1,16 +1,17 @@
 #include "RuleReturner.h"
 
-RuleReturner::RuleReturner(DdNode* head)
+RuleReturner::RuleReturner(DdNode* head, Direction _direction)
 {
     iter.setCurr(head);
     current = head;
+    direction = _direction;
 }
 
 RuleReturner::~RuleReturner()
 {
     
 }
-vector <string> RuleReturner::returnRules()
+vector <GroupedRule> RuleReturner::returnRules()
 {
     return rules;
 }
@@ -25,6 +26,7 @@ void RuleReturner::findBddRules(BDDit tracker)
     char one = '1';
     char zero = '0';
     
+    
     if(tracker.isPenultimateNode())
     {
 		
@@ -37,12 +39,9 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             tracker.appendRule(one);
         }
-        rules.push_back(tracker.returnWholeRule());
-
-        else tracker.appendRule(one);
-        
-		rules.push_back(tracker.returnWholeRule());
-
+        GroupedRule gRule(direction, tracker.returnWholeRule());
+        rules.push_back(gRule);
+        //cout<<gRule.returnBinRule()<<endl;
         return;
     }
     else
@@ -86,7 +85,8 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             BDDit branchTracker = tracker;
             branchTracker.appendRule(one);
-            rules.push_back(branchTracker.returnWholeRule());
+            GroupedRule gRule(direction, tracker.returnWholeRule());
+            rules.push_back(gRule);
             
             tracker.appendRule(zero);
             tracker.setCurr(tracker.returnElseChild());
@@ -188,7 +188,7 @@ DdNode* BDDit::returnThenChild()
     return Cudd_T(curr);
 }
 
-string BDDit::returnWholeRule()
+const string BDDit::returnWholeRule()
 {
     return rule;
 }

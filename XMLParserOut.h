@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "cudd.h"
 #include "BDDBuilder.h"
 #include "RuleReturner.h"
@@ -13,22 +14,20 @@
 class XMLParserOut
 {
 public:
-    XMLParserOut(Direction _direction, Accept_Deny _accept_deny);
-    void setRules(vector<string>& _rules);
-    void buildGroupRules();
+    XMLParserOut(vector<GroupedRule> _rules);
+    //void setRules(vector<GroupedRule>& _rules);
+   // void buildGroupRules();
     void orderByIPDesc();
     vector<string> ruleCreater();
-    void printoutputRule();
+    void printoutputRule(string& username);
 
     ~XMLParserOut();
     string BinToDec();
     
 private:
-    vector<string> rules;
+    vector<GroupedRule> rules;
     vector<string> xmlrules;
-    vector<GroupedRule> groupedRules;
-    Direction direction;
-    Accept_Deny accept_deny;
+    vector<GroupedRule> outRules;
 };
 
 

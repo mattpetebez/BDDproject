@@ -9,5 +9,7 @@ int main()
     XMLParserIn parserIn(filename);
     parserIn.buildStringRules();
     parserIn.buildBinRules();
+    parserIn.sortBinGroupedRule();
+    parserIn.printRulesConsole();
     return 0;
 }

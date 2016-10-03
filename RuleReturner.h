@@ -1,4 +1,5 @@
 #include <iostream>
+#include "GroupedRule.h"
 #include "cudd.h"
 #include <vector>
 
@@ -7,7 +8,7 @@ using namespace std;
 #ifndef RULERETURNER_H
 #define RULERETURNER_H
 
-#define NO_BITS_IN_RULE 9
+#define NO_BITS_IN_RULE 72
 
 struct BDDit
 {
@@ -28,22 +29,24 @@ struct BDDit
     DdNode * returnElseChild();
     DdNode * returnThenChild();
     
-    string returnWholeRule();
+    const string returnWholeRule();
 };
 
 class RuleReturner
 {
 public:
-    RuleReturner(DdNode* head);
+    RuleReturner(DdNode* head, Direction _direction);
     ~RuleReturner();
     void startRuleReturn();
     void findBddRules(BDDit tracker);
     bool validNoRules();
-    vector <string> returnRules();
+    vector<GroupedRule> returnRules();
 private:
     DdNode * current;
-    vector<string> rules;
+    vector<GroupedRule> rules;
     BDDit iter;
+    Direction direction;
+    
 };
 
 #endif // RULERETURNER_H

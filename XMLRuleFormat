@@ -1,104 +1,28 @@
 <filter name='strict-S' chain='root'>
   <uuid>cbf0e4db-22b8-40b2-ab54-91003332461d</uuid>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='146.141.177.27' srcipmask='24'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='146.141.177.27' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='105.227.134.158' srcipmask='8' dstportstart='80'/>
+
+   <rule action='accept' direction='in' priority='999'>
+    <tcp srcipaddr='196.44.24.47' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
   </rule>
 
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='196.44.24.27' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='196.44.24.27' srcipmask='16' dstportstart='5800'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='196.43.135.86' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='197.228.137.30' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='197.228.137.30' srcipmask='16' dstportstart='5800'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='169.1.19.252' srcipmask='16' dstportstart='5800'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='169.0.135.227' srcipmask='16' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='169.1.19.252' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='169.0.135.227' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='197.78.137.30' srcipmask='8' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.13.14.130' srcipmask='8' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.246.100.125' srcipmask='13' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.246.14.130' srcipmask='13' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.150.100.125' srcipmask='13' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.150.14.130' srcipmask='13' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.13.14.130' srcipmask='15' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.148.14.130' srcipmask='14' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.148.14.130' srcipmask='15' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='146.13.14.130' srcipmask='16' dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='400'>
-    <tcp srcipaddr='41.23.190.124' srcipmask='8' dstportstart='80'/>
-  </rule>
-  <rule action='drop' direction='in' priority='480'>
-    <tcp dstportstart='80'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='146.141.177.27' srcipmask='24' dstportstart='5800'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='146.141.177.27' srcipmask='24' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='10.1.1.0' srcipmask='16' dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='10.1.1.0' srcipmask='16' dstportstart='5800'/>
-  </rule>
-  <rule action='drop' direction='in' priority='480'>
-    <tcp dstportstart='5900'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='146.141.177.27' srcipmask='24' dstportstart='3389'/>
-  </rule>
-  <rule action='accept' direction='in' priority='480'>
-    <tcp srcipaddr='146.141.3.5' srcipmask='24' dstportstart='3389'/>
-  </rule>
-  <rule action='drop' direction='in' priority='480'>
-    <tcp dstportstart='3389'/>
+  <rule action='accept' direction='in' priority='888'>
+    <tcp srcipaddr='196.44.24.57' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
   </rule>
 
-  <rule action='drop' direction='in' priority='490'>
-    <all/>
+  <rule action='accept' direction='in' priority='777'>
+    <tcp srcipaddr='196.44.24.67' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
   </rule>
+
+  <rule action='accept' direction='in' priority='666'>
+    <tcp srcipaddr='196.44.24.77' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
+  </rule>
+
+  <rule action='accept' direction='in' priority='555'>
+    <tcp srcipaddr='196.44.24.87' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
+  </rule>
+
+  <rule action='accept' direction='in' priority='444'>
+    <tcp srcipaddr='196.44.24.97' srcipmask='16' dstipaddr='192.168.1.16' srcportstart='80' srcportend='100' dstportstart='80' dstportend='100'/>
+  </rule>
+
 </filter>

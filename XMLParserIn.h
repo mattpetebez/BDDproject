@@ -9,11 +9,15 @@
 #include "binDecConverter.h"
 #include "GroupedRule.h"
 
+#define BIT_8 8
+#define BIT_16 16
+
 using namespace std;
 
 struct BinGroupedRule{
-  BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule);
-  
+    BinGroupedRule();
+ BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule);
+ int returnPriority(); 
 private:
   Accept_Deny accept_deny;
   Direction direction;
@@ -29,11 +33,19 @@ public:
     void buildBinRules();
     bool deleter(string& find, string& currentRule, string& rulepiece);
     void iptobin(string& ip);
+    void sortBinGroupedRule();
+    void printRulesConsole();
+    vector<GroupedRule> returnInRules();
+    
     ~XMLParserIn();
 private:
+    void sortByPriority(vector<GroupedRule>& rules);
     string parseXMLtoBin(string& _wholeRule);
     string filename;
-    vector <BinGroupedRule> parsedRules;
+    //Need these
+    vector<GroupedRule> inRules;
+    vector<GroupedRule> outRules;
+    
     vector<string> BinRules;
     vector<string> StringRules;
     binDecConverter _decToBin;

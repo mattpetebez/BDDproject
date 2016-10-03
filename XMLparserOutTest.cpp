@@ -1,19 +1,19 @@
 #include <iostream>
 
 #include "XMLParserOut.h"
-
+#include "RuleReturner.h"
 using namespace std;
 
 int main()
 {
-    vector<string> rules;
+ /*   vector<string> rules;
     string test = "000000010000000001010000000000000101000011000000101010000000000000000100";
     cout << test.size() << endl;
     rules.push_back(test);
     
     Direction _direction = Direction::out;
     Accept_Deny _accept_deny = Accept_Deny::deny;
-    XMLParserOut xmlparserout(_direction, _accept_deny);
+   // XMLParserOut xmlparserout(_direction);
     xmlparserout.setRules(rules);
     vector<string> xmlrules;
     
@@ -22,7 +22,7 @@ int main()
     xmlrules = xmlparserout.ruleCreater();
     
     cout << xmlrules[0] << endl;
-    
+    */
     
     return 0;
 }

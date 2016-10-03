@@ -4,6 +4,7 @@
 #include <iterator>
 #include <fstream>
 #include "cudd.h"
+#include "GroupedRule.h"
 
 #ifndef BDDBUILDER_H
 #define BDDBUILDER_H
@@ -13,14 +14,15 @@ using namespace std;
 class BDDBuilder
 {
 public:
-    BDDBuilder(vector<string>& binRules);
+    BDDBuilder(vector<GroupedRule> binRules);
+    void addRule(string& rule, string& action);
     void buildBDD();
     ~BDDBuilder();
     void printBDD(string& filename);
     DdNode* returnHead();
 private:
     int inRuleCount;
-    vector<string> inRules;
+    vector<GroupedRule> inRules;
     DdNode* mainBdd;
     DdNode* addedBDD;
     DdManager* manager = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
