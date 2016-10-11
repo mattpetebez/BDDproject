@@ -11,7 +11,7 @@ RuleReturner::~RuleReturner()
 {
     
 }
-vector <GroupedRule> RuleReturner::returnRules()
+vector<GroupedRule> RuleReturner::returnRules()
 {
     return rules;
 }
@@ -41,7 +41,7 @@ void RuleReturner::findBddRules(BDDit tracker)
         }
         GroupedRule gRule(direction, tracker.returnWholeRule());
         rules.push_back(gRule);
-        //cout<<gRule.returnBinRule()<<endl;
+
         return;
     }
     else
@@ -134,7 +134,7 @@ void BDDit::setCurr(DdNode* _curr)
     }
 }
 
-bool BDDit::isPenultimateNode()
+const bool BDDit::isPenultimateNode()
 {
     if(Cudd_IsConstant(Cudd_E(curr)) && Cudd_IsConstant(Cudd_T(curr)))
     {
@@ -144,7 +144,7 @@ bool BDDit::isPenultimateNode()
     else return false;
 }
 
-bool BDDit::hasTwoChildren()
+const bool BDDit::hasTwoChildren()
 {
     if(!Cudd_IsConstant(Cudd_E(curr)) && !Cudd_IsConstant(Cudd_T(curr)))
     {
@@ -152,7 +152,7 @@ bool BDDit::hasTwoChildren()
     }
     else return false;
 }
-bool BDDit::constThenChild()
+const bool BDDit::constThenChild()
 {
     if (Cudd_IsConstant(Cudd_T(curr)) && !Cudd_IsConstant(Cudd_E(curr)))
     {
@@ -161,7 +161,7 @@ bool BDDit::constThenChild()
     else return false;
 }
 
-bool BDDit::constElseChild()
+const bool BDDit::constElseChild()
 {
     if (Cudd_IsConstant(Cudd_E(curr)) && !Cudd_IsConstant(Cudd_T(curr)))
     {
@@ -170,7 +170,7 @@ bool BDDit::constElseChild()
     else return false;
 }
 
-bool BDDit::compIsOdd()
+const bool BDDit::compIsOdd()
 {
     if ((compCount%2) == 0)
     {

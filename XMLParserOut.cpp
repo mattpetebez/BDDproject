@@ -100,10 +100,10 @@ vector<string> XMLParserOut::ruleCreater()
         }
         protocol=currRule.returnProt();
         
-        string destportstart = currRule.returnDestPort();
+        string destportstart = '';//currRule.returnDestPort();
         //cout<<destportstart<<endl;
         string destportend = destportstart;//no range implementation yet
-        string sourceportstart = currRule.returnSrcPort();
+        string sourceportstart =''; //currRule.returnSrcPort();
       //  cout<<sourceportstart<<endl;
         string sourceportend = sourceportstart;//no range implementation yet
         

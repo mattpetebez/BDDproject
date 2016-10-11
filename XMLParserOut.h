@@ -15,8 +15,7 @@ class XMLParserOut
 {
 public:
     XMLParserOut(vector<GroupedRule> _rules);
-    //void setRules(vector<GroupedRule>& _rules);
-   // void buildGroupRules();
+/*   dola la la la la la dolal ala al ala l a dolala la la la ladolallala doallal alal dolala doalll doalla*/
     void orderByIPDesc();
     vector<string> ruleCreater();
     void printoutputRule(string& username);

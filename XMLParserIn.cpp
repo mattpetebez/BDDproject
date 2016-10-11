@@ -154,7 +154,7 @@ void XMLParserIn::buildBinRules()
             }
         }
         
-        //Need to find source port end:
+        //Need to find source port start:
         string srcPortDeleter = "srcportstart='";
         if(deleter(srcPortDeleter, currRule, srcportstart))
         {
@@ -190,19 +190,20 @@ void XMLParserIn::buildBinRules()
         //Now need to check range: 4 ranges: srcip,dstip,srcport,dstport-> worry about it later
         
         //Determine whether rule belongs at inaccept, inreject, outaccept and outreject
-        
+       // GroupedRule rule  ()
         string wholeBinRule = "";
         int intProt = (int)protocol;
+        
         wholeBinRule += (_decToBin.returnStr(intProt, BIT_8)) + srcportstart + destportstart + ip;
         GroupedRule binRule(accept_deny, intPriority, direction, wholeBinRule);
+        
+        //GroupedRule rule(protocol, srcportstart,srcportend,destportstart,destportend,ip1,ip2,ip3,ip4,priority,direction,action);
         if(direction == Direction::in)
         {
             inRules.push_back(binRule);
         }
         else
         {
-           // cout << "Pushing back outrule." << endl;
-           // cout <<"intPriority: " << intPriority << endl;
             outRules.push_back(binRule);
         }
         ++iter;
@@ -289,7 +290,7 @@ void XMLParserIn::printRulesConsole()
     }
 }
 
-vector<GroupedRule> XMLParserIn::returnInRules()
+const vector<GroupedRule> XMLParserIn::returnInRules()
 {
     return inRules;
 }

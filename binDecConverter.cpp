@@ -8,7 +8,7 @@ binDecConverter::~binDecConverter()
 {
 }
 
-int binDecConverter::returnInt(string& num)
+const int binDecConverter::returnInt(string& num)
 {
     ulong decimal;
     if(num.size()==8)
@@ -19,7 +19,7 @@ int binDecConverter::returnInt(string& num)
     return (int)decimal;
 }
 
-string binDecConverter::returnStr(int& decimal, int bits)
+const string binDecConverter::returnStr(int& decimal, int bits)
 {
     string binary="";
     if(bits == 8)

@@ -14,7 +14,7 @@ using namespace std;
 class BDDBuilder
 {
 public:
-    BDDBuilder(vector<GroupedRule> binRules);
+    BDDBuilder(vector<GroupedRule> &binRules);
     void addRule(string& rule, string& action);
     void buildBDD();
     ~BDDBuilder();

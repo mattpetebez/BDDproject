@@ -18,12 +18,12 @@ struct BDDit
     string rule;
     void setCurr(DdNode* _curr);
     void appendRule(char _rule);
-    bool isPenultimateNode();
-    bool hasTwoChildren();
-    bool constThenChild();
-    bool constElseChild();
+    const bool isPenultimateNode();
+    const bool hasTwoChildren();
+    const bool constThenChild();
+    const bool constElseChild();
     
-    bool compIsOdd();
+    const bool compIsOdd();
     
     BDDit &operator=(const BDDit &aBDDit);
     DdNode * returnElseChild();

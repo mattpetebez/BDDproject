@@ -35,12 +35,11 @@ public:
     void iptobin(string& ip);
     void sortBinGroupedRule();
     void printRulesConsole();
-    vector<GroupedRule> returnInRules();
+    const vector<GroupedRule> returnInRules();
     
     ~XMLParserIn();
 private:
     void sortByPriority(vector<GroupedRule>& rules);
-    string parseXMLtoBin(string& _wholeRule);
     string filename;
     //Need these
     vector<GroupedRule> inRules;

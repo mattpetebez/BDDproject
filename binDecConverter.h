@@ -9,8 +9,8 @@ class binDecConverter
 public:
     binDecConverter();
     ~binDecConverter();
-    string returnStr(int& num, int bits);
-    int returnInt(string& _string);
+    const string returnStr(int& num, int bits);
+    const int returnInt(string& _string);
 };
 
 #endif // BINDECCONVERTER_H

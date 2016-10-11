@@ -2,9 +2,11 @@
 #define GROUPEDRULE_H
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "binDecConverter.h"
 
+#define DEFAULT_PRIORITY 500
 enum class Accept_Deny
 {
     accept,
@@ -38,35 +40,55 @@ using namespace std;
 class GroupedRule
 {
 public:
-    GroupedRule();
+    GroupedRule();//Not sure if needed
     ~GroupedRule();
-    //GroupedRule(int _prot,int _srcPort,int _destPort,int _ip1,int _ip2,int _ip3, int _ip4, Direction _direction);
-    GroupedRule(Direction _direction, string _binRule);
-    GroupedRule(Accept_Deny accept_deny, int _priority, Direction _direction, string wholeBinRule);
-    Direction returnDirection();
+    
+    GroupedRule(Protocol _protocol, int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,
+    int _ip1,int _ip2,int _ip3, int _ip4,int _priority, Direction _direction, Accept_Deny accept_deny); //Used for parser in
+    
+    GroupedRule(Direction _direction, string _binRule);//Needed for parser out
+    
+    GroupedRule(Accept_Deny accept_deny, int _priority, Direction _direction, string wholeBinRule);//Not sure of needed;
+    
+    const Direction returnDirection();
     const int returnPriority();
-    string returnProt();
-    string returnSrcPort();
-    string returnDestPort();
-    string returnIp1();
-    string returnIp2();
-    string returnIp3();
-    string returnIp4();
-    string returnWholeIP();
-    void extractRule();
-    const string returnBinRule();
+    const string returnProt();
+    const int returnSrcPort();
+    const int returnDestPort();
+    const int returnSrcPortEnd();
+    const int returnDestPortEnd();
+
+    const string returnWholeIP();
+    
+    const vector<string> returnBinRule();
+
+    bool isRanged();
+    const vector<string> returnRangedBinRule();
 private:
-    int prot;
-    int srcPort;
-    int destPort;
+    void createBinRule();
+    void extractRule(string& rule);
+    void checkForTwoRange(int&, int&, string&);
+    
+    const string returnIp1();
+    const string returnIp2();
+    const string returnIp3();
+    const string returnIp4();
+    
+    int srcPortStart;
+    int srcPortEnd;
+    int destPortStart;
+    int destPortEnd;
     int ip1;
     int ip2;
     int ip3;
     int ip4;
     int priority;
+    
+    Protocol protocol;
     Accept_Deny action;
-    string binRule;
+    vector<string> binRule;
     Direction direction;
+    
     binDecConverter converter;
 };
 

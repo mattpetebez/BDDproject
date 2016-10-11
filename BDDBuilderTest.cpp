@@ -55,4 +55,11 @@ int main()
     
     
     return 0;
-}
+ }//What do we need to do still?
+//Need to manage the range requirements. This can be done using a range helper class that takes in a grouped rule and returns a vector of grouped rules.
+//Need to deal with 444444444444444444444444444444444444444 fuck you science
+//Need to make the super machine and fire wall classes. Firewall will hold the machines and deal with rule requests. Machines will host the rule sets for themselves as well as being responsible for developing their own BDDs.
+//Ned to make a BDD node checker/helper for the firewall class for validating rules that may conflict with the administrative rules.
+//Need to implement a parser out helper class that assists output range grouping. 
+//Need to think of a way to manage the BDDs in memory constantly, and also consider the rebuilding of BDDs as required (provided they are a rule that has a higher priority than some check we perfomr to prevent the invalidation of rules desired to be kept.
+//At some point, need to get the web server up and running. Lekker man.
