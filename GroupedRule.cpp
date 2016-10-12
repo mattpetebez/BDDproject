@@ -15,7 +15,29 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     
     string dstPortTemp = _binRule.substr(24, 16);
     checkForTwoRange(destPortEnd, destPortStart, dstPortTemp);
-    extractRule(_binRule);
+    
+    string protocolTemp = _binRule.substr(0, 8);
+    checkForTwoRange(protocolUpper, protocolLower, protocolTemp);
+    
+    if((returnProtocolRange() + 2) == (int)Protocol::all)
+    {
+        protocol = Protocol::all;
+        setProtocolRange((int)protocol);
+    }
+    
+    string ip1Temp = _binRule.substr(40, 8);
+    checkForTwoRange(ip1Upper, ip1Lower, ip1Temp);
+    
+    string ip2Temp = _binRule.substr(48, 8);
+    checkForTwoRange(ip2Upper, ip2Lower, ip2Temp);
+    
+    string ip3Temp = _binRule.substr(56, 8);
+    checkForTwoRange(ip3Upper, ip3Lower, ip3Temp);
+    
+    string ip4Temp = _binRule.substr(64, 8);
+    checkForTwoRange(ip3Upper, ip4Lower, ip4Temp);
+    
+    //extractRule(_binRule);
     priority = DEFAULT_PRIORITY;
     
 }
@@ -44,6 +66,21 @@ int _ip3, int _ip4,int _priority, Direction _direction,Accept_Deny _action)
     action = _action;
     direction = _direction;
     binRule = returnRangedBinRule();
+    
+    ip1Lower = ip1;
+    ip1Upper = ip1;
+    
+    ip2Lower = ip2;
+    ip2Upper = ip2;
+    
+    ip3Lower = ip3;
+    ip3Upper = ip3;
+    
+    ip4Lower = ip4;
+    ip4Upper = ip4;
+    
+    protocolLower = (int)protocol;
+    protocolUpper = (int)protocol;
 }
 const string GroupedRule::returnProt()
 {
@@ -67,14 +104,14 @@ const string GroupedRule::returnProt()
         }
         default:
         {
-            cout<<"error";
+            cout<<"error the switch is not working in grouped rule";
         return "How those sausages, 5 minutes turkish";
         
         }
     }
 }
 
-const int GroupedRule::returnSrcPort()
+const int GroupedRule::returnSrcPortStart()
 {
     
     return srcPortStart;
@@ -84,7 +121,7 @@ const int GroupedRule::returnSrcPort()
     return sport;*/
 }
 
-const int GroupedRule::returnDestPort()
+const int GroupedRule::returnDestPortStart()
 {
     
     return destPortStart;
@@ -174,8 +211,11 @@ void GroupedRule::extractRule(string& _binRule)
         {
             _prot = "00000000";
         }
-        _prot = atoi(_prot.c_str());
-
+        
+        int prot = converter.returnInt(_prot);
+    
+        protocol = (Protocol)prot;
+    
         string _ip1 = _binRule.substr(40, 8);
         ip1 = atoi(_ip1.c_str());
         string _ip2 = _binRule.substr(48, 8);
@@ -271,4 +311,58 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
     }
     upperBound = converter.returnInt(binUpper);
     lowerBound = converter.returnInt(binLower);
+}
+
+void GroupedRule::setSrcPortStart(int _srcportstart)
+{
+    srcPortStart = _srcportstart;
+}
+
+void GroupedRule::setSrcPortEnd(int _srcportend)
+{
+    srcPortEnd = _srcportend;
+}
+
+void GroupedRule::setDstPortStart(int _destportstart)
+{
+    destPortStart = _destportstart;
+}
+
+void GroupedRule::setDstPortEnd(int _destportend)
+{
+    destPortEnd = _destportend;
+}
+void GroupedRule::debugReturnEnglishRule()
+{
+    cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
+ << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << endl; 
+}
+
+bool GroupedRule::isRanged()
+{
+    if(ip1Upper != ip1Lower || ip2Upper != ip2Lower || ip3Upper != ip3Lower || ip4Upper != ip4Lower || protocolUpper != protocolLower)
+    {
+        return true;
+    }
+    else return false;
+}
+
+vector<GroupedRule> GroupedRule::returnRangedGroup()
+{
+    vector<GroupedRule> returnRules;
+    
+    //Need to do range for protocol
+    for(int i = protocolLower; i <= protocolUpper; i++)
+    {
+        GroupedRule newGrpRule = this;
+        newGrpRule.setRangeProt(i);
+        returnRules.push_back(newGrpRule);
+    }
+    
+    //Now need to range ip1 FROM return rules:
+    
+    for(auto i: returnRules)
+    {
+        if(ip1Upper)
+    }
 }

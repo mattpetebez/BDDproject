@@ -15,7 +15,7 @@ class BDDBuilder
 {
 public:
     BDDBuilder(vector<GroupedRule> &binRules);
-    void addRule(string& rule, string& action);
+    void addRule(string& rule, string& action);//Need to change this to adding a grouped rule.
     void buildBDD();
     ~BDDBuilder();
     void printBDD(string& filename);

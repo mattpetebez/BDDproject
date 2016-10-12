@@ -22,7 +22,8 @@ enum class Protocol
 {
     tcp=1,
     udp,
-    icmp
+    icmp,
+    all
 };
 /*struct BinGroupedRule{
     BinGroupedRule();
@@ -53,17 +54,26 @@ public:
     const Direction returnDirection();
     const int returnPriority();
     const string returnProt();
-    const int returnSrcPort();
-    const int returnDestPort();
+    const int returnSrcPortStart();
+    const int returnDestPortStart();
     const int returnSrcPortEnd();
     const int returnDestPortEnd();
-
-    const string returnWholeIP();
+    void setDstPortEnd(int);
+    void setDstPortStart(int);
+    void setSrcPortEnd(int);
     
+    vector<GroupedRule> returnRangedGroup();
+    
+    bool isRanged();
+    
+    void setSrcPortStart(int);
+    const string returnWholeIP();
+
     const vector<string> returnBinRule();
 
-    bool isRanged();
     const vector<string> returnRangedBinRule();
+    
+    void debugReturnEnglishRule();
 private:
     void createBinRule();
     void extractRule(string& rule);
@@ -76,13 +86,30 @@ private:
     
     int srcPortStart;
     int srcPortEnd;
+    
     int destPortStart;
     int destPortEnd;
+    
+    int protocolLower;
+    int protocolUpper;
+    
+    int ip1Lower;
+    int ip2Lower;
+    int ip3Lower;
+    int ip4Lower;
+    
+    int ip1Upper;
+    int ip2Upper;
+    int ip3Upper;
+    int ip4Upper;
+    
     int ip1;
     int ip2;
     int ip3;
     int ip4;
+    
     int priority;
+    int _prot;
     
     Protocol protocol;
     Accept_Deny action;

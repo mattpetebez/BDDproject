@@ -1,40 +1,37 @@
 #include "XMLParserIn.h"
 
-BinGroupedRule::BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule)
-{
-    accept_deny = _accept_deny;
-    direction = _direction;
-    priority = _priority;
-    binRule = _binRule;    
-}
-
 XMLParserIn::XMLParserIn(string& _filename)
 {
     filename = _filename;
 }
 
-
-
 XMLParserIn::~XMLParserIn()
 {
 }
 
+void XMLParserIn::buildInOutRules(vector<GroupedRule>& _inRules, vector<GroupedRule>& _outRules)
+{
+    buildStringRules();
+    buildBinRules();
+    sortByPriority(inRules);
+    sortByPriority(outRules);
+    
+    _inRules = inRules;
+    _outRules = outRules;
+}
+
 void XMLParserIn::buildStringRules()
 {
-    string line = "";\
+    string line = "";
     string ruleDelimiter = "<rule";
     string allRules = "";
     ifstream infile;
-        /*
-     *   .0\\
-     * iprange ??
-     */
+
     infile.open(filename);
     {
         while(getline(infile, line))
         {
             allRules += line;
-            //cout << line << endl;
         }
     }
 	infile.close();
@@ -153,12 +150,14 @@ void XMLParserIn::buildBinRules()
                 iptobin(ip);
             }
         }
-        
+        int srcportstartint=0;
+        int srcportendint=0;
         //Need to find source port start:
         string srcPortDeleter = "srcportstart='";
         if(deleter(srcPortDeleter, currRule, srcportstart))
         {
             int temp = atoi(srcportstart.c_str());
+            srcportstartint = temp;
             srcportstart = _decToBin.returnStr(temp, BIT_16);
         }
         
@@ -167,23 +166,27 @@ void XMLParserIn::buildBinRules()
         if(deleter(srcPortDeleter, currRule, srcportend))
         {
             int temp = atoi(srcportend.c_str());
+            srcportendint = temp;
             srcportend = _decToBin.returnStr(temp, BIT_16);            
         }
         
         //Need to find dstportstart
         string dstPortDeleter = "dstportstart='";
+        int destportstartint=0;
         
         if(deleter(dstPortDeleter, currRule, destportstart))
         {
             int temp = atoi(destportstart.c_str());
+            destportstartint=temp;
             destportstart = _decToBin.returnStr(temp, BIT_16);
         }
-        
+        int destportendint=0;
         //Need to find dstportend
         dstPortDeleter = "dstportend='";
         if(deleter(dstPortDeleter, currRule, destportend))
         {
             int temp = atoi(destportend.c_str());
+            destportendint =temp;
             destportend = _decToBin.returnStr(temp, BIT_16);
         }
         
@@ -194,11 +197,14 @@ void XMLParserIn::buildBinRules()
         string wholeBinRule = "";
         int intProt = (int)protocol;
         
-        wholeBinRule += (_decToBin.returnStr(intProt, BIT_8)) + srcportstart + destportstart + ip;
-        GroupedRule binRule(accept_deny, intPriority, direction, wholeBinRule);
+        //wholeBinRule += (_decToBin.returnStr(intProt, BIT_8)) + srcportstart + destportstart + ip;
         
-        //GroupedRule rule(protocol, srcportstart,srcportend,destportstart,destportend,ip1,ip2,ip3,ip4,priority,direction,action);
-        if(direction == Direction::in)
+        //GroupedRule binRule(protocol, srcportstart, srcportend, destportstart, destportend, ips[0], ips[1], ips[2], ips[3],
+        //priority, direction, accept_deny);
+        Accept_Deny action = accept_deny;
+        cout<<endl<<srcportstartint<<endl<<srcportendint<<endl<<destportstartint<<endl<<destportendint<<endl<<ips[0]<<endl<<ips[1]<<endl<<ips[2]<<endl<<ips[3]<<endl<<intPriority<<endl;
+        GroupedRule binRule(protocol, srcportstartint,srcportendint,destportstartint,destportendint,ips[0],ips[1],ips[2],ips[3],intPriority,direction,action);
+       if(direction == Direction::in)
         {
             inRules.push_back(binRule);
         }
@@ -231,15 +237,24 @@ void XMLParserIn::iptobin(string &ip)
     size_t finder;
     string delimiter = ".";
     string ipAsBin = "";
-    
+    int count =0;
     while(finder != string::npos)
     {
         finder = ip.find(delimiter);
         int tmpDecIp =atoi(ip.substr(0, finder).c_str());
         ipAsBin += _decToBin.returnStr(tmpDecIp, BIT_8);
         ip.erase(0, finder + delimiter.size());
+        count++;
     }
     ip = ipAsBin;
+    string temp = ip.substr(0,8);
+    ips[0]= _decToBin.returnInt(temp);
+    temp = ip.substr(8,8);
+    ips[1]= _decToBin.returnInt(temp);
+    temp = ip.substr(16,8);
+    ips[2]= _decToBin.returnInt(temp);
+    temp = ip.substr(24,8);
+    ips[3]= _decToBin.returnInt(temp);
 }
 
 void XMLParserIn::sortBinGroupedRule()
@@ -267,7 +282,26 @@ void XMLParserIn::sortByPriority(vector<GroupedRule>& rules)//Need to changed to
     }
 }
 
-int BinGroupedRule::returnPriority()
+
+
+void XMLParserIn::printRulesConsole()
+{
+    for(auto i: inRules)
+    {
+        cout << i.returnPriority() << endl;
+    }
+    for (auto i : outRules)
+    {
+        cout << i.returnPriority() << endl;
+    }
+}
+/*
+const vector<GroupedRule> XMLParserIn::returnInRules()
+{
+    return inRules;
+}*/
+
+/*int BinGroupedRule::returnPriority()
 {
     return priority;
 }
@@ -276,21 +310,10 @@ BinGroupedRule::BinGroupedRule(){
     
 }
 
-void XMLParserIn::printRulesConsole()
+BinGroupedRule::BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule)
 {
-    //cout << "input rules" << endl;
-    for(auto i: inRules)
-    {
-        cout << i.returnPriority() << endl;
-    }
-  //  cout << "output rules" << endl;
-    for (auto i : outRules)
-    {
-        cout << i.returnPriority() << endl;
-    }
-}
-
-const vector<GroupedRule> XMLParserIn::returnInRules()
-{
-    return inRules;
-}
+    accept_deny = _accept_deny;
+    direction = _direction;
+    priority = _priority;
+    binRule = _binRule;    
+}*/

@@ -30,7 +30,7 @@ int main()
     srcPortStart = 480;
     srcPortEnd = 490;
     destPortStart = 480;
-    destPortEnd = 490;
+    destPortEnd = 480;
     
     ip1 = 192;
     ip2 = 168;
@@ -38,9 +38,24 @@ int main()
     ip4 = 25;
     
     GroupedRule tester3(protocol, srcPortStart,srcPortEnd,destPortStart,destPortEnd,ip1,ip2,ip3,ip4,priority,direction,action);
+    
+     priority = 500;
+    srcPortStart = 400;
+    srcPortEnd = 410;
+    destPortStart = 420;
+    destPortEnd = 430;
+    
+    ip1 = 192;
+    ip2 = 168;
+    ip3 = 1;
+    ip4 = 25;
+    
+    GroupedRule tester4(protocol, srcPortStart,srcPortEnd,destPortStart,destPortEnd,ip1,ip2,ip3,ip4,priority,direction,action);
+    
     vector<GroupedRule> rules;
     rules.push_back(tester);
     rules.push_back(tester3);
+     rules.push_back(tester4);
     BDDBuilder bddbuilder(rules);
     bddbuilder.buildBDD();
     
@@ -52,7 +67,7 @@ int main()
     vector<GroupedRule> test;
     vector<string> rulez;
     test = rulereturner.returnRules();
-    cout<<test.size()<<endl;
+    //cout<<test.size()<<endl;
     vector<string> retVal;
     
     vector<GroupedRule> tester2Ret;
@@ -76,18 +91,19 @@ int main()
     }
     */
     sorted.groupByIP();
-    sorted.sortBySrcPort();
-    vector<vector<GroupedRule>> testeing = sorted.returnGroup();
+   // sorted.sortBySrcPort();
+   
     
-    cout<<testeing.size()<<endl;
-    cout<<testeing[0].size()<<endl;
-    cout<<testeing[1].size()<<endl;
-    cout<<testeing[0][0].returnSrcPort()<<endl;
-    cout<<testeing[0][1].returnSrcPort()<<endl;
-    cout<<testeing[0][3].returnSrcPort()<<endl;
-    cout<<testeing[1][0].returnSrcPort()<<endl;
-    cout<<testeing[1][1].returnSrcPort()<<endl;
-    cout<<testeing[1][8].returnSrcPort()<<endl;
+    
+    sorted.groupByDstPort();
+    
+    vector<vector<GroupedRule>> testeing = sorted.returnGroup();
+    cout<<"The size of testeing is: "<<testeing.size()<<endl;
+    cout<<"The size of the one ip vector is: "<<testeing[0].size()<<endl;
+    cout<<"The size of the other ip vector is: "<<testeing[1].size()<<endl;
+    testeing[0][0].debugReturnEnglishRule();
+    testeing[0][1].debugReturnEnglishRule();
+    testeing[1][0].debugReturnEnglishRule();
     
     //cout << retVal.size() << endl;
     return 0;

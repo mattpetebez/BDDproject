@@ -14,14 +14,12 @@ BDDBuilder::~BDDBuilder()
 void BDDBuilder::buildBDD()
 {
     vector<GroupedRule>::iterator rulesIter = inRules.begin();
-//    cout << *rulesIter << endl;
     string::iterator ruleCharIter;
     DdNode* curr, *var, *tmp, *temp;
     int count =0;
     int nodeRef;
     while(rulesIter != inRules.end())
     {
-        
         vector<string> currStrRule = (*rulesIter).returnBinRule();
         vector<string>::iterator binIter = currStrRule.begin();
         while(binIter != currStrRule.end())

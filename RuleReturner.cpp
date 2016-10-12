@@ -13,6 +13,7 @@ RuleReturner::~RuleReturner()
 }
 vector<GroupedRule> RuleReturner::returnRules()
 {
+    startRuleReturn();
     return rules;
 }
 

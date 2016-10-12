@@ -14,7 +14,7 @@
 
 using namespace std;
 
-struct BinGroupedRule{
+/*struct BinGroupedRule{
     BinGroupedRule();
  BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule);
  int returnPriority(); 
@@ -23,30 +23,32 @@ private:
   Direction direction;
   int priority;
   string binRule;
-};
+};*/
 
 class XMLParserIn
 {
 public:
     XMLParserIn(string& filename);
+    void buildInOutRules(vector<GroupedRule>& _inRules, vector<GroupedRule>& _outRules);
+    void printRulesConsole();
+    
+//    const vector<GroupedRule> returnInRules();
+    
+    ~XMLParserIn();
+private:
+    int ips[4]={0};
     void buildStringRules();
     void buildBinRules();
     bool deleter(string& find, string& currentRule, string& rulepiece);
     void iptobin(string& ip);
     void sortBinGroupedRule();
-    void printRulesConsole();
-    const vector<GroupedRule> returnInRules();
-    
-    ~XMLParserIn();
-private:
     void sortByPriority(vector<GroupedRule>& rules);
     string filename;
     //Need these
     vector<GroupedRule> inRules;
     vector<GroupedRule> outRules;
-    
-    vector<string> BinRules;
     vector<string> StringRules;
+    
     binDecConverter _decToBin;
 };
 

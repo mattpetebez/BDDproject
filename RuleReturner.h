@@ -37,11 +37,12 @@ class RuleReturner
 public:
     RuleReturner(DdNode* head, Direction _direction);
     ~RuleReturner();
-    void startRuleReturn();
+    
     void findBddRules(BDDit tracker);
     bool validNoRules();
     vector<GroupedRule> returnRules();
 private:
+    void startRuleReturn();
     DdNode * current;
     vector<GroupedRule> rules;
     BDDit iter;
