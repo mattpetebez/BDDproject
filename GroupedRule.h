@@ -7,6 +7,8 @@
 #include "binDecConverter.h"
 
 #define DEFAULT_PRIORITY 500
+#define MASKED_VALUE -1
+
 enum class Accept_Deny
 {
     accept,
@@ -25,16 +27,29 @@ enum class Protocol
     icmp,
     all
 };
-/*struct BinGroupedRule{
-    BinGroupedRule();
- BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule);
- int returnPriority(); 
-private:
-  Accept_Deny accept_deny;
-  Direction direction;
-  int priority;
-  string binRule;
-};*/
+enum class Field
+{
+  ip1Upper = 1,
+  ip1Lower,
+  ip2Upper,
+  ip2Lower,
+  ip3Upper,
+  ip3Lower,
+  ip4Upper,
+  ip4Lower,
+  protocolUpper,
+  protocolLower,
+  dstportstart,
+  dstportend,
+  srcportstart,
+  srcportend,
+  
+  ip1Range,
+  ip2Range,
+  ip3Range,
+  ip4Range,
+  protocolRange
+};
 
 using namespace std;
 
@@ -54,19 +69,15 @@ public:
     const Direction returnDirection();
     const int returnPriority();
     const string returnProt();
-    const int returnSrcPortStart();
-    const int returnDestPortStart();
-    const int returnSrcPortEnd();
-    const int returnDestPortEnd();
-    void setDstPortEnd(int);
-    void setDstPortStart(int);
-    void setSrcPortEnd(int);
-    
+
     vector<GroupedRule> returnRangedGroup();
     
-    bool isRanged();
+    bool isAllMasked(string& _binRule);
     
-    void setSrcPortStart(int);
+    bool isRanged();
+    bool isPortRanged();
+    
+
     const string returnWholeIP();
 
     const vector<string> returnBinRule();
@@ -74,6 +85,9 @@ public:
     const vector<string> returnRangedBinRule();
     
     void debugReturnEnglishRule();
+    
+    void GenericSet(Field _field, int _value);
+    int GenericReturn(Field _field);
 private:
     void createBinRule();
     void extractRule(string& rule);

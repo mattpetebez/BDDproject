@@ -42,20 +42,25 @@ int main()
 //    RuleReturner outRuleReturner(BDDout.returnHead(), Direction::out);
     
     inRules = inRuleReturner.returnRules();
+    for (auto i: inRules)
+    {
+        i.debugReturnEnglishRule();
+    }
 //    outRules = outRuleReturner.returnRules();
     
-    GroupedRuleSorter inSorter(inRules);
+/*    GroupedRuleSorter inSorter(inRules);
 //    GroupedRuleSorter outSorter(outRules);
     vector<GroupedRule> inRulesTemp;
-    inRules = inSorter.sortRules();
+//    inRules = inSorter.sortRules();
 //    outSorter.sortRules();
 //    inRules = inRulesTemp;
     for(auto i: inRules)
     {
+        
         i.debugReturnEnglishRule();
     }
     
-    vector<vector<GroupedRule>> testeing = inSorter.returnGroup();
+    vector<vector<GroupedRule>> testeing = inSorter.returnGroup();*/
 /*    cout<<"The size of testeing is: "<<testeing.size()<<endl;
     cout<<"The size of the one ip vector is: "<<testeing[0].size()<<endl;
     cout<<"The size of the other ip vector is: "<<testeing[1].size()<<endl;

@@ -93,7 +93,7 @@ void GroupedRuleSorter::sortBySrcPort()
             for(int i =0; i<limit; i++)
             {
                 j=i;
-                while(j>0 && rules[j].returnSrcPortStart() < rules[j-1].returnSrcPortStart())
+                while(j>0 && rules[j].GenericReturn(Field::srcportstart) < rules[j-1].GenericReturn(Field::srcportstart))
                 {
                     temp = rules[j];
                     rules[j]=rules[j-1];
@@ -158,22 +158,23 @@ void GroupedRuleSorter::reduceByDestPort(vector<GroupedRule>& groupedRules)
 
 bool GroupedRuleSorter::reduceConsecutiveDstPort(GroupedRule& _prime, GroupedRule& _second)
 {
-    if((_prime.returnProt() == _second.returnProt()) && (_prime.returnSrcPortStart() == _second.returnSrcPortStart()) && (_prime.returnSrcPortEnd() == _second.returnSrcPortEnd()))
+    if((_prime.returnProt() == _second.returnProt()) && (_prime.GenericReturn(Field::srcportstart) == _second.GenericReturn(Field::srcportstart)) 
+    && (_prime.GenericReturn(Field::srcportend) == _second.GenericReturn(Field::srcportend)))
     {
-            int tempPrimeUpper = _prime.returnDestPortEnd();
-            int tempPrimeLower = _prime.returnDestPortStart();
-            int tempSecondUpper = _second.returnDestPortEnd();
-            int tempSecondLower = _second.returnDestPortStart();
+            int tempPrimeUpper = _prime.GenericReturn(Field::dstportend);
+            int tempPrimeLower = _prime.GenericReturn(Field::dstportstart);
+            int tempSecondUpper = _second.GenericReturn(Field::dstportend);
+            int tempSecondLower = _second.GenericReturn(Field::dstportstart);
             
             if((tempSecondLower - tempPrimeUpper) == 1)
             {
-                _prime.setDstPortEnd(tempSecondUpper);
+                _prime.GenericSet(Field::dstportend, tempSecondUpper);
                 return true;
             }
             
             else if ((tempPrimeLower - tempSecondUpper) == 1)
             {
-                _prime.setDstPortStart(tempSecondLower);
+                _prime.GenericSet(Field::dstportstart, tempSecondLower);
                 return true;
             }
             else
@@ -221,22 +222,23 @@ void GroupedRuleSorter::reduceBySrcPort(vector<GroupedRule>& groupedRules)
 
 bool GroupedRuleSorter::reduceConsecutiveSrcPort(GroupedRule& _prime, GroupedRule& _second)
 {
-    if((_prime.returnProt() == _second.returnProt()) && (_prime.returnDestPortStart() == _second.returnDestPortStart()) && (_prime.returnDestPortEnd() == _second.returnDestPortEnd()))
+    if((_prime.returnProt() == _second.returnProt()) && (_prime.GenericReturn(Field::dstportstart) == _second.GenericReturn(Field::dstportstart))
+    && (_prime.GenericReturn(Field::dstportend) == _second.GenericReturn(Field::dstportend)))
     {
-            int tempPrimeUpper = _prime.returnSrcPortEnd();
-            int tempPrimeLower = _prime.returnSrcPortStart();
-            int tempSecondUpper = _second.returnSrcPortEnd();
-            int tempSecondLower = _second.returnSrcPortStart();
+            int tempPrimeUpper = _prime.GenericReturn(Field::srcportend);
+            int tempPrimeLower = _prime.GenericReturn(Field::srcportstart);
+            int tempSecondUpper = _second.GenericReturn(Field::srcportend);
+            int tempSecondLower = _second.GenericReturn(Field::srcportstart);
             
             if((tempSecondLower - tempPrimeUpper) == 1)
             {
-                _prime.setSrcPortEnd(tempSecondUpper);
+                _prime.GenericSet(Field::srcportend, tempSecondUpper);
                 return true;
             }
             
             else if ((tempPrimeLower - tempSecondUpper) == 1)
             {
-                _prime.setSrcPortStart(tempSecondLower);
+                _prime.GenericSet(Field::srcportstart, tempSecondLower);
                 return true;
             }
             else

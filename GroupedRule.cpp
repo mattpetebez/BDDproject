@@ -7,39 +7,87 @@ GroupedRule::GroupedRule()
 }
 GroupedRule::GroupedRule(Direction _direction, string _binRule)
 {
-    binRule.push_back(_binRule);
     direction = _direction;
     
-    string srcPortTemp = _binRule.substr(8,16);
-    checkForTwoRange(srcPortEnd, srcPortStart, srcPortTemp);
-    
-    string dstPortTemp = _binRule.substr(24, 16);
-    checkForTwoRange(destPortEnd, destPortStart, dstPortTemp);
-    
     string protocolTemp = _binRule.substr(0, 8);
-    checkForTwoRange(protocolUpper, protocolLower, protocolTemp);
-    
-    if((returnProtocolRange() + 2) == (int)Protocol::all)
+    if(isAllMasked(protocolTemp))
     {
-        protocol = Protocol::all;
-        setProtocolRange((int)protocol);
+       GenericSet(Field::protocolRange, (int)Protocol::all);
+       protocol = (Protocol)protocolUpper;
+    }
+    else
+    {
+        checkForTwoRange(protocolUpper, protocolLower, protocolTemp);
+        protocol = (Protocol)protocolUpper;
+    }
+    string srcPortTemp = _binRule.substr(8,16);
+    if(isAllMasked(srcPortTemp))
+    {
+       GenericSet(Field::srcportstart, MASKED_VALUE);
+       GenericSet(Field::srcportend, MASKED_VALUE);
+    }
+    else
+    {
+    checkForTwoRange(srcPortEnd, srcPortStart, srcPortTemp);
     }
     
+    string dstPortTemp = _binRule.substr(24, 16);
+    
+    if(isAllMasked(dstPortTemp))
+    {
+       GenericSet(Field::dstportstart, MASKED_VALUE);
+       GenericSet(Field::dstportend, MASKED_VALUE);
+    }
+    else
+    {
+    checkForTwoRange(destPortEnd, destPortStart, dstPortTemp);
+    }
+    
+    
     string ip1Temp = _binRule.substr(40, 8);
+    if(isAllMasked(ip1Temp))
+    {
+       GenericSet(Field::ip1Range, MASKED_VALUE);
+    }
+    else
+    {
     checkForTwoRange(ip1Upper, ip1Lower, ip1Temp);
+    }
+    
     
     string ip2Temp = _binRule.substr(48, 8);
-    checkForTwoRange(ip2Upper, ip2Lower, ip2Temp);
+    if(isAllMasked(ip2Temp))
+    {
+       GenericSet(Field::ip2Range, MASKED_VALUE);
+    }
+    else
+    {
+        checkForTwoRange(ip2Upper, ip2Lower, ip2Temp);
+    }
+   
     
     string ip3Temp = _binRule.substr(56, 8);
-    checkForTwoRange(ip3Upper, ip3Lower, ip3Temp);
+       if(isAllMasked(ip3Temp))
+    {
+       GenericSet(Field::ip3Range, MASKED_VALUE);
+    }
+    else
+    {
+        checkForTwoRange(ip3Upper, ip3Lower, ip3Temp);
+    }
+    
     
     string ip4Temp = _binRule.substr(64, 8);
-    checkForTwoRange(ip3Upper, ip4Lower, ip4Temp);
+    if(isAllMasked(ip4Temp))
+    {
+       GenericSet(Field::ip4Range, MASKED_VALUE);
+    }
+    else
+    {
+        checkForTwoRange(ip4Upper, ip4Lower, ip4Temp);
+    }
     
-    //extractRule(_binRule);
     priority = DEFAULT_PRIORITY;
-    
 }
 
 GroupedRule::GroupedRule(Accept_Deny accept_deny, int _priority, Direction _direction, string wholeBinRule)
@@ -111,44 +159,17 @@ const string GroupedRule::returnProt()
     }
 }
 
-const int GroupedRule::returnSrcPortStart()
+bool GroupedRule::isAllMasked(string& _binRule)
 {
-    
-    return srcPortStart;
-   /* string tmp = to_string(srcPortStart);
-    int temp = converter.returnInt(tmp);
-    string sport= "'"+to_string(temp)+"'";
-    return sport;*/
-}
-
-const int GroupedRule::returnDestPortStart()
-{
-    
-    return destPortStart;
- /*  string tmp = to_string(destPortStart);
-    int temp = converter.returnInt(tmp);
-    string sport= "'"+to_string(temp)+"'";
-    return sport;*/
-}
-
-const int GroupedRule::returnSrcPortEnd()
-{
-    
-    return srcPortEnd;
-   /* string tmp = to_string(srcPortEnd);
-    int temp = converter.returnInt(tmp);
-    string sport= "'"+to_string(temp)+"'";
-    return sport;*/
-}
-
-const int GroupedRule::returnDestPortEnd()
-{
-    
-    return destPortEnd;
-   /*string tmp = to_string(destPortEnd);
-    int temp = converter.returnInt(tmp);
-    string sport= "'"+to_string(temp)+"'";
-    return sport;*/
+    bool allMasked = true;
+    for(auto i: _binRule)
+    {
+        if(i != '2')
+        {
+            allMasked = false;
+        }
+    }
+    return allMasked;
 }
 
 const string GroupedRule::returnIp1()
@@ -230,9 +251,19 @@ const int GroupedRule::returnPriority()
     return priority;
 }
 
+bool GroupedRule::isPortRanged()
+{
+    if (srcPortEnd - srcPortStart != 0 || destPortEnd - destPortStart != 0)
+    {
+        return true;
+    }
+    else return false;
+}
+
 bool GroupedRule::isRanged()
 {
-    if(srcPortEnd - srcPortStart != 0 || destPortEnd - destPortStart != 0)
+    if(GenericReturn(Field::ip1Range) > 0 || GenericReturn(Field::ip2Range) > 0 || GenericReturn(Field::ip3Range) > 0
+    || GenericReturn(Field::ip4Range) > 0 || GenericReturn(Field::protocolRange) > 0)
     {
         return true;
     }
@@ -243,18 +274,6 @@ bool GroupedRule::isRanged()
 const vector<string> GroupedRule::returnRangedBinRule()
 {
     vector<string> rangedBinRule;
-    
-/*    int srcportrange = srcPortEnd - srcPortStart;
-    int dstportrange = destPortEnd - destPortStart;
-    
-    if(srcportrange == 0)
-    {
-        srcportrange += 1;
-    }
-    if(dstportrange == 0)
-    {
-        dstportrange += 1;
-    }*/
     
     string binRule = "";
     int tempProt = (int)protocol;
@@ -289,80 +308,236 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
     string binLower = "";
     
     string::iterator binIter = binaryRule.begin();
-    
-    while(binIter != binaryRule.end())
+    if(binaryRule.find('2') != string::npos)
     {
-        if((*binIter) == '1')
+        while(binIter != binaryRule.end())
         {
-            binUpper += '1';
-            binLower += '1';
+            if((*binIter) == '1')
+            {
+                binUpper += '1';
+                binLower += '1';
+            }
+            else if ((*binIter) == '0')
+            {
+                binUpper +='0';
+                binLower +='0';
+            }
+            else if ((*binIter) == '2')
+            {
+                binUpper += '1';
+                binLower += '0';
+            }
+            ++binIter;
         }
-        else if ((*binIter) == '0')
-        {
-            binUpper +='0';
-            binLower +='0';
-        }
-        else if ((*binIter) == '2')
-        {
-            binUpper += '1';
-            binLower += '0';
-        }
-        ++binIter;
+        upperBound = converter.returnInt(binUpper);
+        lowerBound = converter.returnInt(binLower);
     }
-    upperBound = converter.returnInt(binUpper);
-    lowerBound = converter.returnInt(binLower);
+    
 }
 
-void GroupedRule::setSrcPortStart(int _srcportstart)
-{
-    srcPortStart = _srcportstart;
-}
-
-void GroupedRule::setSrcPortEnd(int _srcportend)
-{
-    srcPortEnd = _srcportend;
-}
-
-void GroupedRule::setDstPortStart(int _destportstart)
-{
-    destPortStart = _destportstart;
-}
-
-void GroupedRule::setDstPortEnd(int _destportend)
-{
-    destPortEnd = _destportend;
-}
 void GroupedRule::debugReturnEnglishRule()
 {
     cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
- << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << endl; 
+ << destPortStart << "-" << destPortEnd << " IP: " << endl; 
 }
 
-bool GroupedRule::isRanged()
+void GroupedRule::GenericSet(Field _field, int _value)
 {
-    if(ip1Upper != ip1Lower || ip2Upper != ip2Lower || ip3Upper != ip3Lower || ip4Upper != ip4Lower || protocolUpper != protocolLower)
+    switch(_field)
     {
-        return true;
+        case Field::ip1Lower:
+        {
+            ip1Lower = _value;
+            break;
+        }
+        case Field::ip1Upper:
+        {
+            ip1Upper = _value;
+            break;
+        }
+        case Field::ip2Lower:
+        {
+            ip2Lower = _value;
+            break;
+        }
+        case Field::ip2Upper:
+        {
+            ip2Upper = _value;
+            break;
+        }
+        case Field::ip3Lower:
+        {
+            ip3Lower = _value;
+            break;
+        }
+        case Field::ip3Upper:
+        {
+            ip3Upper = _value;
+            break;
+        }
+        case Field::ip4Lower:
+        {
+            ip4Lower = _value;
+            break;
+        }
+        case Field::ip4Upper:
+        {
+            ip4Upper = _value;
+            break;
+        }
+        case Field::protocolLower:
+        {
+            protocolLower = _value;
+            break;
+        }
+        case Field::protocolUpper:
+        {
+            protocolUpper = _value;
+            break;
+        }        
+        case Field::ip1Range:
+        {
+            ip1Lower = _value;
+            ip1Upper = _value;
+        }        
+        case Field::ip2Range:
+        {
+            ip2Lower = _value;
+            ip2Upper = _value;
+        }        
+        case Field::ip3Range:
+        {
+            ip3Lower = _value;
+            ip3Upper = _value;
+        }        
+        case Field::ip4Range:
+        {
+            ip4Lower = _value;
+            ip4Upper = _value;
+        }        
+        case Field::protocolRange:
+        {
+            protocolLower = _value;
+            protocolUpper = _value;
+        }
+        case Field::dstportstart:
+        {
+             destPortStart = _value;
+        }
+        case Field::dstportend:
+        {
+             destPortEnd = _value;
+        }
+        case Field::srcportstart:
+        {
+             srcPortStart = _value;
+        }
+        case Field::srcportend:
+        {
+             srcPortEnd = _value;
+        }
+        default:
+        {
+            cout << "I don't know Tommy. It's TIP-TOP." << endl;
+        }
     }
-    else return false;
 }
 
-vector<GroupedRule> GroupedRule::returnRangedGroup()
+int GroupedRule::GenericReturn(Field _field)
 {
-    vector<GroupedRule> returnRules;
-    
-    //Need to do range for protocol
-    for(int i = protocolLower; i <= protocolUpper; i++)
+    switch(_field)
     {
-        GroupedRule newGrpRule = this;
-        newGrpRule.setRangeProt(i);
-        returnRules.push_back(newGrpRule);
-    }
-    
-    //Now need to range ip1 FROM return rules:
-    
-    for(auto i: returnRules)
-    {
-        if(ip1Upper)
+        case Field::ip1Lower:
+        {
+            return ip1Lower;
+            break;
+        }
+        case Field::ip1Upper:
+        {
+            return ip1Upper;
+            break;
+        }
+        case Field::ip2Lower:
+        {
+            return ip2Lower;
+            break;
+        }
+        case Field::ip2Upper:
+        {
+            return ip2Upper;
+            break;
+        }
+        case Field::ip3Lower:
+        {
+            return ip3Lower;
+            break;
+        }
+        case Field::ip3Upper:
+        {
+            return ip3Upper;
+            break;
+        }
+        case Field::ip4Lower:
+        {
+            return ip4Lower;
+            break;
+        }
+        case Field::ip4Upper:
+        {
+            return ip4Upper;
+            break;
+        }
+        case Field::protocolLower:
+        {
+            return protocolLower;
+            break;
+        }
+        case Field::protocolUpper:
+        {
+            return protocolUpper;
+            break;
+        }
+        
+        case Field::ip1Range:
+        {
+            return ip1Upper - ip1Lower;
+        }        
+        case Field::ip2Range:
+        {
+            return ip2Upper - ip2Lower;
+        }        
+        case Field::ip3Range:
+        {
+            return ip3Upper - ip3Lower;
+        }        
+        case Field::ip4Range:
+        {
+            return ip4Upper - ip4Lower;
+        }        
+        case Field::protocolRange:
+        {
+            return protocolUpper - protocolLower;
+        }
+        case Field::dstportstart:
+        {
+            return destPortStart;
+        }
+        case Field::dstportend:
+        {
+            return destPortEnd;
+        }
+        case Field::srcportstart:
+        {
+            return srcPortStart;
+        }
+        case Field::srcportend:
+        {
+            return srcPortEnd;
+        }
+        default:
+        {
+            cout << "Tommy, the tit, is praying; and if he isn't, he fucken should be." << endl;
+            return -1;
+        }
     }
 }

@@ -10,6 +10,7 @@ using namespace std;
 
 #define NO_BITS_IN_RULE 72
 
+
 struct BDDit
 {
     BDDit();
@@ -30,6 +31,8 @@ struct BDDit
     DdNode * returnThenChild();
     
     const string returnWholeRule();
+    
+
 };
 
 class RuleReturner
