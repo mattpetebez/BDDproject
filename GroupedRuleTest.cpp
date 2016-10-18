@@ -12,7 +12,7 @@ int main()
 { 
     Direction direction = Direction::in;
     Protocol protocol = Protocol::icmp;
-    Accept_Deny action = Accept_Deny::accept;
+    Action action = Action::accept;
     int priority = 500;
     int srcPortStart = 490;
     int srcPortEnd = 500;

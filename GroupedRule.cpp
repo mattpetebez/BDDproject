@@ -8,7 +8,6 @@ GroupedRule::GroupedRule()
 GroupedRule::GroupedRule(Direction _direction, string _binRule)
 {
     direction = _direction;
-    
     string protocolTemp = _binRule.substr(0, 8);
     if(isAllMasked(protocolTemp))
     {
@@ -28,7 +27,7 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     }
     else
     {
-    checkForTwoRange(srcPortEnd, srcPortStart, srcPortTemp);
+        checkForTwoRange(srcPortEnd, srcPortStart, srcPortTemp);
     }
     
     string dstPortTemp = _binRule.substr(24, 16);
@@ -40,7 +39,7 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     }
     else
     {
-    checkForTwoRange(destPortEnd, destPortStart, dstPortTemp);
+        checkForTwoRange(destPortEnd, destPortStart, dstPortTemp);
     }
     
     
@@ -51,7 +50,7 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     }
     else
     {
-    checkForTwoRange(ip1Upper, ip1Lower, ip1Temp);
+        checkForTwoRange(ip1Upper, ip1Lower, ip1Temp);
     }
     
     
@@ -60,14 +59,14 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     {
        GenericSet(Field::ip2Range, MASKED_VALUE);
     }
-    else
+   else
     {
         checkForTwoRange(ip2Upper, ip2Lower, ip2Temp);
     }
    
     
     string ip3Temp = _binRule.substr(56, 8);
-       if(isAllMasked(ip3Temp))
+    if(isAllMasked(ip3Temp))
     {
        GenericSet(Field::ip3Range, MASKED_VALUE);
     }
@@ -86,49 +85,52 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
     {
         checkForTwoRange(ip4Upper, ip4Lower, ip4Temp);
     }
-    
+
     priority = DEFAULT_PRIORITY;
 }
 
-GroupedRule::GroupedRule(Accept_Deny accept_deny, int _priority, Direction _direction, string wholeBinRule)
+GroupedRule::GroupedRule(Action _action, int _priority, Direction _direction, string wholeBinRule)
 {
-    action = accept_deny;
+    action = _action;
     priority = _priority;
     direction = _direction;
     binRule.push_back(wholeBinRule);
 }
 
+int GroupedRule::returnAction()
+{
+    return (int)action;
+}
+
 GroupedRule::GroupedRule(Protocol _protocol,int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,int _ip1,int _ip2,
-int _ip3, int _ip4,int _priority, Direction _direction,Accept_Deny _action)
+int _ip3, int _ip4,int _priority, Direction _direction,Action _action)
 {
     protocol = _protocol;
     srcPortStart = _srcPortStart;
     srcPortEnd = _srcPortEnd;
     destPortStart = _destPortStart;
     destPortEnd = _destPortEnd;
-    ip1 = _ip1;
-    ip2 = _ip2;
-    ip3 = _ip3;
-    ip4 = _ip4;
+
     priority = _priority;
     action = _action;
     direction = _direction;
-    binRule = returnRangedBinRule();
     
-    ip1Lower = ip1;
-    ip1Upper = ip1;
+    ip1Lower = _ip1;
+    ip1Upper = _ip1;
     
-    ip2Lower = ip2;
-    ip2Upper = ip2;
+    ip2Lower = _ip2;
+    ip2Upper = _ip2;
     
-    ip3Lower = ip3;
-    ip3Upper = ip3;
+    ip3Lower = _ip3;
+    ip3Upper = _ip3;
     
-    ip4Lower = ip4;
-    ip4Upper = ip4;
+    ip4Lower = _ip4;
+    ip4Upper = _ip4;
     
     protocolLower = (int)protocol;
     protocolUpper = (int)protocol;
+    
+    binRule = returnRangedBinRule();
 }
 const string GroupedRule::returnProt()
 {
@@ -136,7 +138,6 @@ const string GroupedRule::returnProt()
     {
         case Protocol::tcp:
         {
-            //cout<<"Whats wrong with the code i dono tommy its tip top";
             return "tcp";
             break;
         }
@@ -152,9 +153,8 @@ const string GroupedRule::returnProt()
         }
         default:
         {
-            cout<<"error the switch is not working in grouped rule";
-        return "How those sausages, 5 minutes turkish";
-        
+            cout << "Error the switch is not working in grouped rule" << endl;
+            return "How those sausages, 5 minutes turkish";
         }
     }
 }
@@ -172,41 +172,9 @@ bool GroupedRule::isAllMasked(string& _binRule)
     return allMasked;
 }
 
-const string GroupedRule::returnIp1()
-{
-     string tmp = to_string(ip1);
-    int temp = converter.returnInt(tmp);
-    string sport= to_string(temp);
-    return sport;
-}
-
-const string GroupedRule::returnIp2()
-{
-     string tmp = to_string(ip2);
-    int temp = converter.returnInt(tmp);
-    string sport= to_string(temp);
-    return sport;
-}
-
-const string GroupedRule::returnIp3()
-{
-     string tmp = to_string(ip3);
-    int temp = converter.returnInt(tmp);
-    string sport= to_string(temp);
-    return sport;
-}
-
-const string GroupedRule::returnIp4()
-{
-    string tmp = to_string(ip4);
-    int temp = converter.returnInt(tmp);
-    string sport= to_string(temp);
-    return sport;
-}
-
 const string GroupedRule::returnWholeIP()
 {
-    return "'"+returnIp1()+"."+returnIp2()+"."+returnIp3()+"."+returnIp4()+"'";
+    return "'"+to_string(ip1Lower)+"."+to_string(ip2Lower)+"."+to_string(ip3Lower)+"."+to_string(ip4Lower)+"'";
 }
 
 GroupedRule::~GroupedRule()
@@ -223,29 +191,6 @@ const vector<string> GroupedRule::returnBinRule()
     return binRule;
 }
 
-void GroupedRule::extractRule(string& _binRule)
-{
-        binDecConverter converter;
-
-        string _prot = _binRule.substr(0,8);
-        if(_prot == "22222222")
-        {
-            _prot = "00000000";
-        }
-        
-        int prot = converter.returnInt(_prot);
-    
-        protocol = (Protocol)prot;
-    
-        string _ip1 = _binRule.substr(40, 8);
-        ip1 = atoi(_ip1.c_str());
-        string _ip2 = _binRule.substr(48, 8);
-        ip2 = atoi(_ip2.c_str());
-        string _ip3 = _binRule.substr(56, 8);
-        ip3 = atoi(_ip3.c_str());
-        string _ip4 = _binRule.substr(64, 8);
-        ip4 = atoi(_ip4.c_str());
-}
 const int GroupedRule::returnPriority()
 {
     return priority;
@@ -279,7 +224,7 @@ const vector<string> GroupedRule::returnRangedBinRule()
     int tempProt = (int)protocol;
     binRule += converter.returnStr(tempProt, 8);
     
-    string ip = converter.returnStr(ip1, 8) + converter.returnStr(ip2, 8) + converter.returnStr(ip3, 8) + converter.returnStr(ip4, 8);
+    string ip = converter.returnStr(ip1Lower, 8) + converter.returnStr(ip2Lower, 8) + converter.returnStr(ip3Lower, 8) + converter.returnStr(ip4Lower, 8);
     
     for(int i = srcPortStart; i <= srcPortEnd; i++)
     {
@@ -304,33 +249,39 @@ const vector<string> GroupedRule::returnRangedBinRule()
 
 void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& binaryRule)
 {
-    string binUpper = "";
-    string binLower = "";
-    
-    string::iterator binIter = binaryRule.begin();
     if(binaryRule.find('2') != string::npos)
     {
-        while(binIter != binaryRule.end())
-        {
-            if((*binIter) == '1')
+        string binUpper = "";
+        string binLower = "";
+        
+        string::iterator binIter = binaryRule.begin();
+      
+            while(binIter != binaryRule.end())
             {
-                binUpper += '1';
-                binLower += '1';
+                if((*binIter) == '1')
+                {
+                    binUpper += '1';
+                    binLower += '1';
+                }
+                else if ((*binIter) == '0')
+                {
+                    binUpper +='0';
+                    binLower +='0';
+                }
+                else if ((*binIter) == '2')
+                {
+                    binUpper += '1';
+                    binLower += '0';
+                }
+                ++binIter;
             }
-            else if ((*binIter) == '0')
-            {
-                binUpper +='0';
-                binLower +='0';
-            }
-            else if ((*binIter) == '2')
-            {
-                binUpper += '1';
-                binLower += '0';
-            }
-            ++binIter;
-        }
-        upperBound = converter.returnInt(binUpper);
-        lowerBound = converter.returnInt(binLower);
+            upperBound = converter.returnInt(binUpper);
+            lowerBound = converter.returnInt(binLower);
+    }
+    else
+    {
+        upperBound = converter.returnInt(binaryRule);
+        lowerBound = upperBound;
     }
     
 }
@@ -338,7 +289,43 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
 void GroupedRule::debugReturnEnglishRule()
 {
     cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
- << destPortStart << "-" << destPortEnd << " IP: " << endl; 
+ << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << endl; 
+}
+GroupedRule GroupedRule::deepcopy()
+{
+    
+    GroupedRule temp;
+    temp.direction = direction;
+    
+    temp.ip1Lower = ip1Lower;
+    temp.ip2Lower = ip2Lower;
+    temp.ip3Lower = ip3Lower;
+    temp.ip4Lower = ip4Lower;
+    
+    temp.ip1Upper = ip1Upper;
+    temp.ip2Upper = ip2Upper;
+    temp.ip3Upper = ip3Upper;
+    temp.ip4Upper = ip4Upper;
+
+    temp.protocolUpper = protocolUpper;
+    temp.protocolLower = protocolLower;
+    
+    temp.srcPortStart = srcPortStart;
+    temp.srcPortEnd = srcPortEnd;
+    temp.destPortStart = destPortStart;
+    temp.destPortEnd = destPortEnd;
+    
+    temp.protocol = protocol;
+    temp.priority = priority;
+    temp.action = action;
+    temp.binRule = binRule;
+    temp._prot = _prot;
+    return temp;
+}
+
+void GroupedRule::setDirection(Direction _direction)
+{
+    direction =_direction;
 }
 
 void GroupedRule::GenericSet(Field _field, int _value)
@@ -399,42 +386,52 @@ void GroupedRule::GenericSet(Field _field, int _value)
         {
             ip1Lower = _value;
             ip1Upper = _value;
+            break;
         }        
         case Field::ip2Range:
         {
             ip2Lower = _value;
             ip2Upper = _value;
+            break;
         }        
         case Field::ip3Range:
         {
             ip3Lower = _value;
             ip3Upper = _value;
+            break;
         }        
         case Field::ip4Range:
         {
             ip4Lower = _value;
             ip4Upper = _value;
+            break;
         }        
         case Field::protocolRange:
         {
             protocolLower = _value;
             protocolUpper = _value;
+            protocol = (Protocol)_value;
+            break;
         }
         case Field::dstportstart:
         {
-             destPortStart = _value;
+            destPortStart = _value;
+            break;
         }
         case Field::dstportend:
         {
              destPortEnd = _value;
+             break;
         }
         case Field::srcportstart:
         {
              srcPortStart = _value;
+             break;
         }
         case Field::srcportend:
         {
              srcPortEnd = _value;
+             break;
         }
         default:
         {
@@ -501,38 +498,47 @@ int GroupedRule::GenericReturn(Field _field)
         case Field::ip1Range:
         {
             return ip1Upper - ip1Lower;
+            break;
         }        
         case Field::ip2Range:
         {
             return ip2Upper - ip2Lower;
+            break;
         }        
         case Field::ip3Range:
         {
             return ip3Upper - ip3Lower;
+            break;
         }        
         case Field::ip4Range:
         {
             return ip4Upper - ip4Lower;
+            break;
         }        
         case Field::protocolRange:
         {
             return protocolUpper - protocolLower;
+            break;
         }
         case Field::dstportstart:
         {
             return destPortStart;
+            break;
         }
         case Field::dstportend:
         {
             return destPortEnd;
+            break;
         }
         case Field::srcportstart:
         {
             return srcPortStart;
+            break;
         }
         case Field::srcportend:
         {
             return srcPortEnd;
+            break;
         }
         default:
         {

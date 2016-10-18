@@ -31,9 +31,7 @@ public:
     XMLParserIn(string& filename);
     void buildInOutRules(vector<GroupedRule>& _inRules, vector<GroupedRule>& _outRules);
     void printRulesConsole();
-    
-//    const vector<GroupedRule> returnInRules();
-    
+        
     ~XMLParserIn();
 private:
     int ips[4]={0};

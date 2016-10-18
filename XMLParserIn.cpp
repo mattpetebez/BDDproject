@@ -59,8 +59,7 @@ void XMLParserIn::buildStringRules()
 
 void XMLParserIn::buildBinRules()
 {
-    //For these rules, need action, direction, priority, protocol, dstipaddr, srcipaddr, srcportstart, srcportend, dstportstart, dstportend (srcmask?)
-    Accept_Deny accept_deny;
+    Action action;
     Direction direction;
     string priority;
     Protocol protocol;
@@ -83,13 +82,12 @@ void XMLParserIn::buildBinRules()
         finder = currRule.find("accept");
         if(finder != string::npos)
         {
-            accept_deny = Accept_Deny::accept;
+            action = Action::accept;
         }
         finder = currRule.find("drop");
         if(finder != string::npos)
         {
-           // cout << "found a deny rule" << endl;
-            accept_deny = Accept_Deny::deny;
+            action = Action::deny;
         }
 
         
@@ -143,7 +141,6 @@ void XMLParserIn::buildBinRules()
         //Need to search for dstipaddress
         else if(direction == Direction::out)
         {
-            //cout << "Found an out rule." << endl;
             string dstIpDeleter = "dstipaddr='";
             if(deleter(dstIpDeleter,currRule,ip))
             {
@@ -190,19 +187,7 @@ void XMLParserIn::buildBinRules()
             destportend = _decToBin.returnStr(temp, BIT_16);
         }
         
-        //Now need to check range: 4 ranges: srcip,dstip,srcport,dstport-> worry about it later
-        
-        //Determine whether rule belongs at inaccept, inreject, outaccept and outreject
-       // GroupedRule rule  ()
         string wholeBinRule = "";
-        int intProt = (int)protocol;
-        
-        //wholeBinRule += (_decToBin.returnStr(intProt, BIT_8)) + srcportstart + destportstart + ip;
-        
-        //GroupedRule binRule(protocol, srcportstart, srcportend, destportstart, destportend, ips[0], ips[1], ips[2], ips[3],
-        //priority, direction, accept_deny);
-        Accept_Deny action = accept_deny;
-        cout<<endl<<srcportstartint<<endl<<srcportendint<<endl<<destportstartint<<endl<<destportendint<<endl<<ips[0]<<endl<<ips[1]<<endl<<ips[2]<<endl<<ips[3]<<endl<<intPriority<<endl;
         GroupedRule binRule(protocol, srcportstartint,srcportendint,destportstartint,destportendint,ips[0],ips[1],ips[2],ips[3],intPriority,direction,action);
        if(direction == Direction::in)
         {
@@ -295,25 +280,3 @@ void XMLParserIn::printRulesConsole()
         cout << i.returnPriority() << endl;
     }
 }
-/*
-const vector<GroupedRule> XMLParserIn::returnInRules()
-{
-    return inRules;
-}*/
-
-/*int BinGroupedRule::returnPriority()
-{
-    return priority;
-}
-
-BinGroupedRule::BinGroupedRule(){
-    
-}
-
-BinGroupedRule::BinGroupedRule(Accept_Deny _accept_deny, int _priority, Direction _direction, string _binRule)
-{
-    accept_deny = _accept_deny;
-    direction = _direction;
-    priority = _priority;
-    binRule = _binRule;    
-}*/

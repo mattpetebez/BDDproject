@@ -23,20 +23,17 @@ void RuleReturner::startRuleReturn()
 }
 void RuleReturner::findBddRules(BDDit tracker)
 {
-    
     char one = '1';
     char zero = '0';
     
-    
     if(tracker.isPenultimateNode())
     {
-		
         if(tracker.compIsOdd())
         {
             tracker.appendRule(zero);
         }
         
-        else 
+        else
         {
             tracker.appendRule(one);
         }
@@ -49,6 +46,13 @@ void RuleReturner::findBddRules(BDDit tracker)
     {
         if(tracker.constElseChild() && tracker.compIsOdd())
         {
+            if(Cudd_IsComplement(tracker.returnElseChild()))
+            {
+                BDDit branchTracker = tracker;
+                branchTracker.appendRule(zero);
+                GroupedRule gRule(direction, branchTracker.returnWholeRule());
+                rules.push_back(gRule);
+            }
             tracker.appendRule(one);
             tracker.setCurr(tracker.returnThenChild());
             findBddRules(tracker);
@@ -78,7 +82,6 @@ void RuleReturner::findBddRules(BDDit tracker)
         {            
             tracker.appendRule(one);
             tracker.setCurr(tracker.returnThenChild());
-            
             findBddRules(tracker);
         }
         
@@ -86,7 +89,7 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             BDDit branchTracker = tracker;
             branchTracker.appendRule(one);
-            GroupedRule gRule(direction, tracker.returnWholeRule());
+            GroupedRule gRule(direction, branchTracker.returnWholeRule());
             rules.push_back(gRule);
             
             tracker.appendRule(zero);
@@ -95,7 +98,6 @@ void RuleReturner::findBddRules(BDDit tracker)
             findBddRules(tracker);
         }
     }
-    
 }
 
 bool RuleReturner::validNoRules()
@@ -116,6 +118,7 @@ BDDit::BDDit()
     {
         rule += '2';
     }
+
 }
 
 BDDit &BDDit::operator=(const BDDit &aBDDit)

@@ -13,8 +13,8 @@ vector<GroupedRule> GroupedRuleSorter::sortRules()
 {
     
     groupByIP();
-    sortBySrcPort();
-    groupByDstPort();//Need to change the name of this function.
+    sortBySrcPort(Field::srcportstart);
+    groupByDstPort();
     rebuildRules();
     return rules;
 }
@@ -27,18 +27,10 @@ void GroupedRuleSorter::rebuildRules()
     while(secondary != grpedByIP.end())
     {
         (*primary).insert((*primary).end(), (*secondary).begin(), (*secondary).end());
-/*        for(auto i: (*primary))
-        {
-            i.debugReturnEnglishRule();
-        }*/
         ++secondary;
     }
     rules.clear();
     rules = (*primary);
-/*    for(auto i: rules)
-    {
-        i.debugReturnEnglishRule();
-    }*/
 }
 void GroupedRuleSorter::groupByIP()
 {
@@ -61,16 +53,12 @@ void GroupedRuleSorter::groupByIP()
             
             if((*tempIter).returnWholeIP() == tempIP)
             {
-//                cout<<(*tempIter).returnWholeIP()<<endl;
                 GroupedRule tempGroupedRule = (*tempIter);
                 tempGrpIP.push_back(tempGroupedRule);
                 rules.erase(tempIter);
             }
             else ++tempIter;
         }
-        
-        
-        
         grpedByIP.push_back(tempGrpIP);
         
     }
@@ -81,7 +69,7 @@ vector<vector<GroupedRule>> GroupedRuleSorter::returnGroup()
     return grpedByIP;
 }
 
-void GroupedRuleSorter::sortBySrcPort()
+void GroupedRuleSorter::sortBySrcPort(Field field)
 {
     for(auto i:grpedByIP)
     {
@@ -93,7 +81,7 @@ void GroupedRuleSorter::sortBySrcPort()
             for(int i =0; i<limit; i++)
             {
                 j=i;
-                while(j>0 && rules[j].GenericReturn(Field::srcportstart) < rules[j-1].GenericReturn(Field::srcportstart))
+                while(j>0 && rules[j].GenericReturn(field) < rules[j-1].GenericReturn(field))
                 {
                     temp = rules[j];
                     rules[j]=rules[j-1];
@@ -104,6 +92,8 @@ void GroupedRuleSorter::sortBySrcPort()
         }
     }
 }
+
+
     
 void GroupedRuleSorter::groupByDstPort()
 {
@@ -135,7 +125,6 @@ void GroupedRuleSorter::reduceByDestPort(vector<GroupedRule>& groupedRules)
         {
             if(primeIter != secondIter)
             {   
-                
                 if(reduceConsecutiveDstPort((*primeIter), (*secondIter)))
                 {
                     groupedRules.erase(secondIter);

@@ -15,7 +15,6 @@ class BDDBuilder
 {
 public:
     BDDBuilder(vector<GroupedRule> &binRules);
-    void addRule(string& rule, string& action);//Need to change this to adding a grouped rule.
     void buildBDD();
     ~BDDBuilder();
     void printBDD(string& filename);
@@ -28,6 +27,5 @@ private:
     DdManager* manager = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
     FILE * BDDDiag;
 };
-
 
 #endif // BDDBUILDER_H

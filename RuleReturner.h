@@ -31,8 +31,6 @@ struct BDDit
     DdNode * returnThenChild();
     
     const string returnWholeRule();
-    
-
 };
 
 class RuleReturner
@@ -40,11 +38,10 @@ class RuleReturner
 public:
     RuleReturner(DdNode* head, Direction _direction);
     ~RuleReturner();
-    
-    void findBddRules(BDDit tracker);
     bool validNoRules();
     vector<GroupedRule> returnRules();
 private:
+    void findBddRules(BDDit tracker);
     void startRuleReturn();
     DdNode * current;
     vector<GroupedRule> rules;

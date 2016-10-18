@@ -9,15 +9,15 @@
 #define DEFAULT_PRIORITY 500
 #define MASKED_VALUE -1
 
-enum class Accept_Deny
+enum class Action
 {
-    accept,
+    accept=1,
     deny
 };
 
 enum class Direction
 {
-    in,
+    in=1,
     out
 };
 enum class Protocol
@@ -29,26 +29,27 @@ enum class Protocol
 };
 enum class Field
 {
-  ip1Upper = 1,
-  ip1Lower,
-  ip2Upper,
-  ip2Lower,
-  ip3Upper,
-  ip3Lower,
-  ip4Upper,
-  ip4Lower,
-  protocolUpper,
-  protocolLower,
-  dstportstart,
-  dstportend,
-  srcportstart,
-  srcportend,
+  ip1Upper = 1, //1
+  ip1Lower, //2
+  ip2Upper, //3
+  ip2Lower, //4
+  ip3Upper, //5
+  ip3Lower, //6
+  ip4Upper, //7
+  ip4Lower, //8
+  protocolUpper, //9
+  protocolLower, //10
+  dstportstart, //11
+  dstportend, //12
+  srcportstart, //13
+  srcportend, //14
   
-  ip1Range,
-  ip2Range,
-  ip3Range,
-  ip4Range,
-  protocolRange
+  ip1Range, //15
+  ip2Range, //16
+  ip3Range, //17
+  ip4Range, //18
+  protocolRange //19
+
 };
 
 using namespace std;
@@ -60,12 +61,12 @@ public:
     ~GroupedRule();
     
     GroupedRule(Protocol _protocol, int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,
-    int _ip1,int _ip2,int _ip3, int _ip4,int _priority, Direction _direction, Accept_Deny accept_deny); //Used for parser in
+    int _ip1,int _ip2,int _ip3, int _ip4,int _priority, Direction _direction, Action accept_deny); //Used for parser in
     
-    GroupedRule(Direction _direction, string _binRule);//Needed for parser out
+    GroupedRule(Direction _direction, string _binRule);//Needed for rule returner;
     
-    GroupedRule(Accept_Deny accept_deny, int _priority, Direction _direction, string wholeBinRule);//Not sure of needed;
-    
+    GroupedRule(Action accept_deny, int _priority, Direction _direction, string wholeBinRule);//Not sure if needed;
+    int returnAction();
     const Direction returnDirection();
     const int returnPriority();
     const string returnProt();
@@ -77,7 +78,7 @@ public:
     bool isRanged();
     bool isPortRanged();
     
-
+    GroupedRule deepcopy();//Is needed?
     const string returnWholeIP();
 
     const vector<string> returnBinRule();
@@ -85,18 +86,13 @@ public:
     const vector<string> returnRangedBinRule();
     
     void debugReturnEnglishRule();
-    
+    void setDirection(Direction);
     void GenericSet(Field _field, int _value);
     int GenericReturn(Field _field);
 private:
     void createBinRule();
     void extractRule(string& rule);
     void checkForTwoRange(int&, int&, string&);
-    
-    const string returnIp1();
-    const string returnIp2();
-    const string returnIp3();
-    const string returnIp4();
     
     int srcPortStart;
     int srcPortEnd;
@@ -117,16 +113,11 @@ private:
     int ip3Upper;
     int ip4Upper;
     
-    int ip1;
-    int ip2;
-    int ip3;
-    int ip4;
-    
     int priority;
     int _prot;
     
     Protocol protocol;
-    Accept_Deny action;
+    Action action;
     vector<string> binRule;
     Direction direction;
     
