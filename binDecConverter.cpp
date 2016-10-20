@@ -2,6 +2,7 @@
 
 binDecConverter::binDecConverter()
 {
+    //balls
 }
 
 binDecConverter::~binDecConverter()
