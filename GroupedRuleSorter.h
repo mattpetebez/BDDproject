@@ -17,7 +17,6 @@ private:
     void groupByIP();
     void sortBySrcPort(Field);
     void sortByDstPort();
-    void sortIP(Field field, vector<GroupedRule>& unsorted);
     void groupByDstPort();
     void reduceRules();
     

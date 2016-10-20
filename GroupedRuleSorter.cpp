@@ -16,9 +16,10 @@ vector<GroupedRule> GroupedRuleSorter::sortRules()
     sortBySrcPort(Field::srcportstart);
     groupByDstPort();
     rebuildRules();
+    reduceByIP();
     return rules;
 }
-
+        
 void GroupedRuleSorter::rebuildRules()
 {
     vector<vector<GroupedRule>>::iterator primary = grpedByIP.begin();
@@ -242,3 +243,21 @@ bool GroupedRuleSorter::reduceConsecutiveSrcPort(GroupedRule& _prime, GroupedRul
     }
     
 }
+
+
+/*                         if((iter1->GenericReturn(Field::ip4Lower) - 1) == (iter2->GenericReturn(Field::ip4Upper))
+                         {
+                             iter1->GenericSet(Field::ip4Lower, iter2->GenericReturn(Field::ip4Lower));
+                             rules.erase(iter2);
+                             iter2 = rules.begin();
+                         }
+                         else if ((iter1->GenericReturn(Field::ip4Upper) + 1) == (iter2->GenericReturn(Field::ip4Lower)))
+                         {
+                             iter1->GenericSet(Field::ip4Upper, iter2->GenericReturn(Field::ip4Upper));
+                             rules.erase(iter2);
+                             iter2 = rules.begin();
+                         }
+                         else if((iter1->GenericReturn(Field::ip4Upper) >= iter2->GenericReturn(Field::ip4Lower)) && (iter1->GenericReturn(Field::ip4Upper) <= iter2->GenericReturn(Field::ip4Upper)))
+                         {
+                             iter1->GenericSet(Field::ip4U)
+                         }*/
