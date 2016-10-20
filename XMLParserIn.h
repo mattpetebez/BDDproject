@@ -49,5 +49,5 @@ private:
     
     binDecConverter _decToBin;
 };
-
+//Lekker
 #endif // XMLPARSERIN_H

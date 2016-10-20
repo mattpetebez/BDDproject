@@ -16,7 +16,6 @@ vector<GroupedRule> GroupedRuleSorter::sortRules()
     sortBySrcPort(Field::srcportstart);
     groupByDstPort();
     rebuildRules();
-    reduceByIP();
     return rules;
 }
         

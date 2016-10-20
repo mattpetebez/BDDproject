@@ -4,13 +4,18 @@
 
 #include <vector>
 #include "GroupedRule.h"
+#include "BDDBuilder.h"
+#include "RuleReturner.h"
 class UserMachine
 {
 public:
     UserMachine();
     ~UserMachine();
     
-    bool addRule(GroupedRule)
+    bool addRule(GroupedRule&);
+    bool deleteRule(GroupedRule&);
+private:
+    vector<GroupedRule>
 
 };
 
