@@ -12,5 +12,5 @@ public:
     const string returnStr(int& num, int bits);
     const int returnInt(string& _string);
 };
-
+//lekker man
 #endif // BINDECCONVERTER_H
