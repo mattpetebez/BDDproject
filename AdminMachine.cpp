@@ -14,7 +14,10 @@ AdminMachine::~AdminMachine()
     vector<GroupedRule> inoutRules;
     inoutRules.insert(inoutRules.end(), inRules.begin(), inRules.end());
     inoutRules.insert(inoutRules.end(),outRules.begin(),outRules.end());
-    XMLParserOut printAdminRules(inoutRules);
+	
+	XMLParserOut out;
+    string username = "Admin";
+    out.parseOutGroupedRules(inoutRules, username);
 
 }
 
@@ -27,7 +30,7 @@ bool AdminMachine::addRule(GroupedRule& _rule)
     }
     else
     {
-        if(_rule->returnDirection() == Direction::in)
+        if(_rule.returnDirection() == Direction::in)
         {
             inRules.push_back(_rule);
             auto tempVec = groupByPriority(inRules);
@@ -40,25 +43,26 @@ bool AdminMachine::addRule(GroupedRule& _rule)
             outRules.push_back(_rule);
             auto tempVec = groupByPriority(outRules);
             removeRedundancy(tempVec);
-            removeCopies(tempVec);
             outRules = rebuildRules(tempVec);
+			removeCopies(outRules);
             return true;
         }
     }
 }
 
-vector<vector> AdminMachine::groupByPriority(vector<GroupedRule>& _rules)
+vector<vector<GroupedRule>> AdminMachine::groupByPriority(vector<GroupedRule>& _rules)
 {
-    if(_rules.isEmpty)
+    if(_rules.empty())
     {
+		vector<vector<GroupedRule>> nullVec;
         cout << "The vector you're trying to group by priorty is empty." << endl;
-        return NULL;
+        return nullVec;
     }
     else
     {
-        vector<vector<GroupedRule> returnVec;
+        vector<vector<GroupedRule>> returnVec;
         returnVec.clear();
-        while(!_rules).empty())
+        while(!_rules.empty())
         {
             auto it = _rules.begin();
             int tempIdentifier = it->returnPriority();
@@ -74,7 +78,7 @@ vector<vector> AdminMachine::groupByPriority(vector<GroupedRule>& _rules)
                 else ++it;
             }
             returnVec.push_back(tempVec);
-            tempVec.clear() //Need to check whether this deletes everything in returnVec?
+            tempVec.clear(); //Need to check whether this deletes everything in returnVec?
         }
         
         return returnVec;
@@ -107,7 +111,7 @@ void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
 {
     auto iter1 = rules.begin();
     auto iter2 = rules.begin();
-    GroupedRule temp = (*iter);
+    //GroupedRule temp = (*iter);
     while(iter1 != rules.end())
     {
         while(iter2 != rules.end())
@@ -116,18 +120,18 @@ void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
             {
                 ++iter2;
             }
-            else if ((*iter1)->GenericReturn(Field::protocolUpper) == (*iter2)->GenericReturn(Field::protocolUpper) &&
-                     (*iter1)->GenericReturn(Field::protocolLower) == (*iter2)->GenericReturn(Field::protocolLower) &&
-                     (*iter1)->GenericReturn(Field::ip1Upper) == (*iter2)->GenericReturn(Field::ip1Upper) &&
-                     (*iter1)->GenericReturn(Field::ip1Lower) == (*iter2)->GenericReturn(Field::ip1Lower) &&
-                     (*iter1)->GenericReturn(Field::ip2Upper) == (*iter2)->GenericReturn(Field::ip2Upper) &&
-                     (*iter1)->GenericReturn(Field::ip2Lower) == (*iter2)->GenericReturn(Field::ip2Lower) &&
-                     (*iter1)->GenericReturn(Field::ip3Upper) == (*iter2)->GenericReturn(Field::ip3Upper) &&
-                     (*iter1)->GenericReturn(Field::ip3Lower) == (*iter2)->GenericReturn(Field::ip3Lower) &&
-                     (*iter1)->GenericReturn(Field::srcportstart) == (*iter2)->GenericReturn(Field::srcportstart) &&
-                     (*iter1)->GenericReturn(Field::srcportend) == (*iter2)->GenericReturn(Field::srcportend) &&
-                     (*iter1)->GenericReturn(Field::dstportstart) == (*iter2)->GenericReturn(Field::dstportstart) &&
-                     (*iter1)->GenericReturn(Field::dstportend) == (*iter2)->GenericReturn(Field::dstportend))
+            else if ((iter1)->GenericReturn(Field::protocolUpper) == (iter2)->GenericReturn(Field::protocolUpper) &&
+                     (iter1)->GenericReturn(Field::protocolLower) == (iter2)->GenericReturn(Field::protocolLower) &&
+                     (iter1)->GenericReturn(Field::ip1Upper) == (iter2)->GenericReturn(Field::ip1Upper) &&
+                     (iter1)->GenericReturn(Field::ip1Lower) == (iter2)->GenericReturn(Field::ip1Lower) &&
+                     (iter1)->GenericReturn(Field::ip2Upper) == (iter2)->GenericReturn(Field::ip2Upper) &&
+                     (iter1)->GenericReturn(Field::ip2Lower) == (iter2)->GenericReturn(Field::ip2Lower) &&
+                     (iter1)->GenericReturn(Field::ip3Upper) == (iter2)->GenericReturn(Field::ip3Upper) &&
+                     (iter1)->GenericReturn(Field::ip3Lower) == (iter2)->GenericReturn(Field::ip3Lower) &&
+                     (iter1)->GenericReturn(Field::srcportstart) == (iter2)->GenericReturn(Field::srcportstart) &&
+                     (iter1)->GenericReturn(Field::srcportend) == (iter2)->GenericReturn(Field::srcportend) &&
+                     (iter1)->GenericReturn(Field::dstportstart) == (iter2)->GenericReturn(Field::dstportstart) &&
+                     (iter1)->GenericReturn(Field::dstportend) == (iter2)->GenericReturn(Field::dstportend))
                      {
                         int iter1Upper = iter1->GenericReturn(Field::ip4Upper);
                         int iter1Lower = iter1->GenericReturn(Field::ip4Lower);
@@ -144,7 +148,7 @@ void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
                         
                         else if(iter2Lower <= iter1Upper && iter2Lower >= iter2Lower)
                         {
-                            iter1->GenericReturn(Field::ip4Lower, iter2Lower);
+                            iter1->GenericSet(Field::ip4Lower, iter2Lower);
                             rules.erase(iter2);
                             iter2 = rules.begin();
                             iter1 = rules.begin();
@@ -164,14 +168,14 @@ void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
                         
                         else if ((iter1Upper+1) == iter2Lower)
                         {
-                            iter1Upper.GenericSet(Field::ip4Upper, iter2Upper);
+                            iter1->GenericSet(Field::ip4Upper, iter2Upper);
                             rules.erase(iter2);
                             iter2 = rules.begin();
                             iter1 = rules.begin();
                         }
                         else if((iter1Lower - 1) == iter2Upper)
                         {
-                            iter1Upper.GenericSet(Field::ip4Lower, iter2Lower);
+                            iter1->GenericSet(Field::ip4Lower, iter2Lower);
                             rules.erase(iter2);
                             iter2 = rules.begin();
                             iter1 = rules.begin();
@@ -185,8 +189,9 @@ vector<GroupedRule> AdminMachine::rebuildRules(vector<vector<GroupedRule>>& rule
 {
     if(rules.empty())
     {
+		vector<GroupedRule> nullVec;
         cout << "No rules in the grouped by priority vectors of admin machine." << endl;
-        return NULL;
+        return nullVec;;
     }
     else
     {
@@ -199,7 +204,7 @@ vector<GroupedRule> AdminMachine::rebuildRules(vector<vector<GroupedRule>>& rule
             returnVec.insert(returnVec.end(), (*iter).begin(), (*iter).end());
         }
         rules.clear();
-        return tempVec;
+        return returnVec;
     }
 }
 
@@ -212,18 +217,18 @@ void AdminMachine::removeCopies(vector<GroupedRule>& rules)
     auto outerIt = rules.begin();
     
     auto innerIt = rules.begin();
-    
+	
     while(outerIt != rules.end())
     {
         while(innerIt != rules.end())
         {
-            if(innerIt == outerIt)
+            if(groupedRuleEquivalence((*innerIt),(*outerIt)))
             {
                 ++innerIt;
             }
             else
             {
-                if((*innerIt) == (*outerIt))
+                if(groupedRuleEquivalence((*innerIt),(*outerIt)))
                 {
                     rules.erase(innerIt);
                 }
@@ -237,23 +242,79 @@ void AdminMachine::removeCopies(vector<GroupedRule>& rules)
 
 bool AdminMachine::deleteRule(GroupedRule& rule)//Might also need to consider a multi delete function
 {
-    if(rules.empty())
-    {
-        cout << "Error: no rules contained in Admin machine rule file, or file not instanitiated into memory." << endl;
-        return false;
-    }
-    
-    else
-    {
-        auto iter = rules.begin();
-        while(iter != rules.end())
+	vector<GroupedRule>::iterator iterBegin;
+	vector<GroupedRule>::iterator iterEnd;
+	
+	if(rule.returnDirection() == Direction::in)
+	{
+		if(inRules.empty())
+		{
+			cout << "Error: no rules contained in Admin machine rule file, or file not instanitiated into memory." << endl;
+            return false;
+		}
+		else
+		{
+			iterBegin == inRules.begin();
+			iterEnd == inRules.end();
+		}
+	}
+	else
+	{
+		if(outRules.empty())
+		{
+			cout << "Error: no rules contained in Admin machine rule file, or file not instanitiated into memory." << endl;
+            return false;
+		}
+		else
+		{
+			iterBegin == outRules.begin();
+			iterEnd == outRules.end();
+		}
+	}
+
+        while(iterBegin != iterEnd)
         {
-            if((*iter) == rule)
+            if(groupedRuleEquivalence((*iterBegin),rule))
             {
-                rules.erase(iter);
-                return true;
+				if(rule.returnDirection()== Direction::in)
+				{
+					 inRules.erase(iterBegin);
+				}
+                else
+				{
+					outRules.erase(iterBegin);
+				}
+				return true;
             }
-            else ++iter;
+            else ++iterBegin;
         }
-    }
+		
+		return false;
+}
+
+bool AdminMachine::groupedRuleEquivalence(GroupedRule& rule1, GroupedRule& rule2)
+{
+	if((rule1).GenericReturn(Field::protocolUpper) == (rule2).GenericReturn(Field::protocolUpper) &&
+                     (rule1).GenericReturn(Field::protocolLower) == (rule2).GenericReturn(Field::protocolLower) &&
+                     (rule1).GenericReturn(Field::ip1Upper) == (rule2).GenericReturn(Field::ip1Upper) &&
+                     (rule1).GenericReturn(Field::ip1Lower) == (rule2).GenericReturn(Field::ip1Lower) &&
+                     (rule1).GenericReturn(Field::ip2Upper) == (rule2).GenericReturn(Field::ip2Upper) &&
+                     (rule1).GenericReturn(Field::ip2Lower) == (rule2).GenericReturn(Field::ip2Lower) &&
+                     (rule1).GenericReturn(Field::ip3Upper) == (rule2).GenericReturn(Field::ip3Upper) &&
+                     (rule1).GenericReturn(Field::ip4Upper) == (rule2).GenericReturn(Field::ip4Upper) &&
+                     (rule1).GenericReturn(Field::ip3Lower) == (rule2).GenericReturn(Field::ip3Lower) &&
+                     (rule1).GenericReturn(Field::ip4Lower) == (rule2).GenericReturn(Field::ip4Lower) &&
+                     (rule1).returnDirection() == (rule2).returnDirection()&&
+                     (rule1).returnPriority() == (rule2).returnPriority()&&
+                     (rule1).GenericReturn(Field::srcportstart) == (rule2).GenericReturn(Field::srcportstart) &&
+                     (rule1).GenericReturn(Field::srcportend) == (rule2).GenericReturn(Field::srcportend) &&
+                     (rule1).GenericReturn(Field::dstportstart) == (rule2).GenericReturn(Field::dstportstart) &&
+                     (rule1).GenericReturn(Field::dstportend) == (rule2).GenericReturn(Field::dstportend))
+					 {
+						 return true;
+					 }
+					 else
+					 {
+						 return false;
+					 }
 }
