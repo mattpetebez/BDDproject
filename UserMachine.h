@@ -6,17 +6,23 @@
 #include "GroupedRule.h"
 #include "BDDBuilder.h"
 #include "RuleReturner.h"
+#include "XMLParserIn.h"
+#include "XMLParserOut.h"
+#include "GroupedRuleSorter.h"
+
+using namespace std;
+
 class UserMachine
 {
 public:
-    UserMachine();
+    UserMachine(string _username);
     ~UserMachine();
     
     bool addRule(GroupedRule&);
     bool deleteRule(GroupedRule&);
 private:
-    vector<GroupedRule>
-
+    string username;
+    vector<GroupedRule> inRules, outRules;
 };
 
 #endif // USERMACHINE_H

@@ -15,6 +15,7 @@ public:
     ~RangeHelper();
     
     vector<GroupedRule> returnRangedRules(GroupedRule&);
+    void returnVectorRangedRules(vector<GroupedRule>& _rules);
     
 private:
     void populateRangedRules();

@@ -1,5 +1,5 @@
 #include "AdminMachine.h"
-
+//Lekker
 AdminMachine::AdminMachine()
 {
     string filename = "Admin-Rules";

@@ -280,3 +280,4 @@ void XMLParserIn::printRulesConsole()
         cout << i.returnPriority() << endl;
     }
 }
+//Lekker

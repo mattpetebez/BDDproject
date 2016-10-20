@@ -58,3 +58,27 @@ void RangeHelper::checkRange(Field range, Field upper, Field lower)
     rangedRules.insert(rangedRules.end(), tempVec.begin(), tempVec.end());
     tempVec.clear();
 }
+
+
+void RangeHelper::returnVectorRangedRules(vector<GroupedRule>& _rules)
+{
+    vector<GroupedRule> appendVec;
+    auto it = _rules.begin();
+    
+    while(it != _rules.end())
+    {
+        if(it->isRanged())
+        {
+            vector<GroupedRule> temp = returnRangedRules((*it));
+            _rules.erase(it);
+            appendVec.insert(appendVec.end(), temp.begin(), temp.end());
+            temp.clear();
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    
+    _rules.insert(_rules.end(), appendVec.begin(), appendVec.end());
+}
