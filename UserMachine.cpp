@@ -4,7 +4,7 @@ UserMachine::UserMachine(string _username)
 {
     username = _username;
     string UserRulesFile = username+"-rules.xml";
-    XMLParserIn inparser(username);
+    XMLParserIn inparser(UserRulesFile);
     inparser.buildInOutRules(inRules, outRules);
 }
 
@@ -27,7 +27,8 @@ bool UserMachine::addRule(GroupedRule& _rule)
         inRules = sorter.sortRules();
         
         XMLParserOut out;
-        out.parseOutGroupedRules(inRules);
+		username = "user2";
+        out.parseOutGroupedRules(inRules, username);
     }
     
     else if(_rule.returnDirection() == Direction::out)
@@ -36,14 +37,16 @@ bool UserMachine::addRule(GroupedRule& _rule)
         BDDBuilder builder(outRules);
         builder.buildBDD();
         
-        RuleReturner returner(builder.returnHead(), Direction::in);
+        RuleReturner returner(builder.returnHead(), Direction::out);
         outRules = returner.returnRules();
         
-        GroupedRuleSorter sorter(inRules);
+		
+        GroupedRuleSorter sorter(outRules);
         outRules = sorter.sortRules();
         
         XMLParserOut out;
-        out.parseOutGroupedRules(outRules);
+		username = "user2";
+        out.parseOutGroupedRules(outRules, username);
     }
 }
 

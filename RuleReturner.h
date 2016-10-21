@@ -37,6 +37,7 @@ class RuleReturner
 {
 public:
     RuleReturner(DdNode* head, Direction _direction);
+	RuleReturner(DdNode* head, Direction _direction, int _priority);
     ~RuleReturner();
     bool validNoRules();
     vector<GroupedRule> returnRules();
@@ -47,6 +48,7 @@ private:
     vector<GroupedRule> rules;
     BDDit iter;
     Direction direction;
+	int priority;
     
 };
 

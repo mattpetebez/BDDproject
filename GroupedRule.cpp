@@ -5,9 +5,10 @@ GroupedRule::GroupedRule()
 {
     
 }
-GroupedRule::GroupedRule(Direction _direction, string _binRule)
+GroupedRule::GroupedRule(Direction _direction, string _binRule, int _priority)
 {
     direction = _direction;
+	priority = _priority;
     string protocolTemp = _binRule.substr(0, 8);
     if(isAllMasked(protocolTemp))
     {
@@ -86,7 +87,7 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule)
         checkForTwoRange(ip4Upper, ip4Lower, ip4Temp);
     }
 
-    priority = DEFAULT_PRIORITY;
+    //priority = DEFAULT_PRIORITY;
 }
 
 GroupedRule::GroupedRule(Action _action, int _priority, Direction _direction, string wholeBinRule)
@@ -289,7 +290,7 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
 void GroupedRule::debugReturnEnglishRule()
 {
     cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
- << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << endl; 
+ << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << " Priority: "<< returnPriority()<<endl; 
 }
 GroupedRule GroupedRule::deepcopy()
 {

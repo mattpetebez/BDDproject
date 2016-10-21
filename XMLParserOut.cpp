@@ -75,8 +75,8 @@ void XMLParserOut::ruleCreater()
 
     string ruleaction = "<rule action='accept'";
     
-	string priority = " priority='500'";
-    
+	string prior =" priority=";
+    string priority="";
 	string direct = " direction=";
  
 
@@ -102,6 +102,8 @@ void XMLParserOut::ruleCreater()
     while(iter != outRules.end())
     {
         GroupedRule currRule = (*iter);
+		
+		priority = prior + "'" +to_string(currRule.returnPriority())+"'";
         if(iter->GenericReturn(Field::ip1Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip2Upper) != MASKED_VALUE
         && iter->GenericReturn(Field::ip3Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip4Upper) != MASKED_VALUE)
         {
@@ -166,7 +168,7 @@ void XMLParserOut::ruleCreater()
 
 void XMLParserOut::printoutputRule(string& username)
 {
-    ofstream xmlOutputRules("/home/matt/" + username + "-rules.xml");
+    ofstream xmlOutputRules("/home/tyron/" + username + "-rules.xml");
 	if (xmlOutputRules.is_open())
 	{
 		xmlOutputRules << "<filter name='"+username+"-rules' chain='root'>\n";

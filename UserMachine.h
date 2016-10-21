@@ -22,7 +22,8 @@ public:
     bool deleteRule(GroupedRule&);
 private:
     string username;
-    vector<GroupedRule> inRules, outRules;
+    vector<GroupedRule> inRules;
+	vector<GroupedRule> outRules;
 };
 
 #endif // USERMACHINE_H

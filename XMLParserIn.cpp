@@ -188,14 +188,22 @@ void XMLParserIn::buildBinRules()
         }
         
         string wholeBinRule = "";
+	
         GroupedRule binRule(protocol, srcportstartint,srcportendint,destportstartint,destportendint,ips[0],ips[1],ips[2],ips[3],intPriority,direction,action);
-       if(direction == Direction::in)
+       
+	   if(direction == Direction::in)
         {
+			if(intPriority!=0)
             inRules.push_back(binRule);
+			
+			//binRule.debugReturnEnglishRule();
         }
         else
         {
+			if(intPriority!=0)
             outRules.push_back(binRule);
+			
+			//binRule.debugReturnEnglishRule();
         }
         ++iter;
     }

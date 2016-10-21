@@ -5,6 +5,14 @@ RuleReturner::RuleReturner(DdNode* head, Direction _direction)
     iter.setCurr(head);
     current = head;
     direction = _direction;
+	priority = 500;
+}
+RuleReturner::RuleReturner(DdNode* head, Direction _direction, int _priority)
+{
+    iter.setCurr(head);
+    current = head;
+    direction = _direction;
+	priority = _priority;
 }
 
 RuleReturner::~RuleReturner()
@@ -37,7 +45,7 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             tracker.appendRule(one);
         }
-        GroupedRule gRule(direction, tracker.returnWholeRule());
+        GroupedRule gRule(direction, tracker.returnWholeRule(), priority);
         rules.push_back(gRule);
 
         return;
@@ -50,7 +58,7 @@ void RuleReturner::findBddRules(BDDit tracker)
             {
                 BDDit branchTracker = tracker;
                 branchTracker.appendRule(zero);
-                GroupedRule gRule(direction, branchTracker.returnWholeRule());
+                GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority);
                 rules.push_back(gRule);
             }
             tracker.appendRule(one);
@@ -89,7 +97,7 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             BDDit branchTracker = tracker;
             branchTracker.appendRule(one);
-            GroupedRule gRule(direction, branchTracker.returnWholeRule());
+            GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority);
             rules.push_back(gRule);
             
             tracker.appendRule(zero);

@@ -63,7 +63,7 @@ public:
     GroupedRule(Protocol _protocol, int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,
     int _ip1,int _ip2,int _ip3, int _ip4,int _priority, Direction _direction, Action accept_deny); //Used for parser in
     
-    GroupedRule(Direction _direction, string _binRule);//Needed for rule returner;
+    GroupedRule(Direction _direction, string _binRule, int _priority);//Needed for rule returner;
     
     GroupedRule(Action accept_deny, int _priority, Direction _direction, string wholeBinRule);//Not sure if needed;
     int returnAction();
