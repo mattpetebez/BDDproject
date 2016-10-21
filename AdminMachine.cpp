@@ -13,8 +13,14 @@ AdminMachine::~AdminMachine()
 {
     vector<GroupedRule> inoutRules;
     inoutRules.insert(inoutRules.end(), inRules.begin(), inRules.end());
-    inoutRules.insert(inoutRules.end(),outRules.begin(),outRules.end());
-	
+	vector<GroupedRule> temp;
+	for(auto i : outRules)
+	{
+		i.setDirection(Direction::out);
+		temp.push_back(i);
+	}
+    inoutRules.insert(inoutRules.end(),temp.begin(),temp.end());
+
 	XMLParserOut out;
     out.parseOutGroupedRules(inoutRules, username);
 
@@ -32,6 +38,7 @@ bool AdminMachine::addRule(GroupedRule& _rule)
         if(_rule.returnDirection() == Direction::in)
         {
             inRules.push_back(_rule);
+
 			//removeCopies(inRules);
             auto tempVec = groupByPriority(inRules);			
             removeRedundancy(tempVec);

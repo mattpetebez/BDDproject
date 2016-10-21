@@ -20,6 +20,7 @@ public:
     
     bool addRule(GroupedRule&);
     bool deleteRule(GroupedRule&);
+	bool groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2);
 private:
     string username;
     vector<GroupedRule> inRules;

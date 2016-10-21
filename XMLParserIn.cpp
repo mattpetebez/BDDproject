@@ -84,11 +84,20 @@ void XMLParserIn::buildBinRules()
         {
             action = Action::accept;
         }
+		else
+		{
         finder = currRule.find("drop");
         if(finder != string::npos)
         {
             action = Action::deny;
         }
+		else
+		{
+			cerr<<"accept or drop was not found for a rule and was set by default to accept"<<endl;
+			action = Action::accept;
+		}
+		}
+		
 
         
         //Need to find direction:
@@ -99,13 +108,30 @@ void XMLParserIn::buildBinRules()
         }
         else
         {
-         direction = Direction::out;
+			finder = currRule.find("direction='out'");
+			if(finder != string::npos)
+			{
+			direction = Direction::out;
+			}
+			else
+			{
+			cerr<<"direction='out' or direction='in' was not found for a rule and was set by default to in"<<endl;
+			direction = Direction::in;
+			}
         }
         
         //Need to find priority:
         string priorityDeleter = "priority='";
-        deleter(priorityDeleter,currRule,priority);
-        int intPriority = atoi(priority.c_str());
+		int intPriority = 0;
+        if(deleter(priorityDeleter,currRule,priority))
+		{
+        intPriority = atoi(priority.c_str());
+		}
+		else
+		{
+		cerr<<"the priority for a rule could not be found and was set by default to 500"<<endl;
+		intPriority =500;
+		}
         
         //Need to find protocol:
         finder = currRule.find("tcp");
@@ -114,6 +140,7 @@ void XMLParserIn::buildBinRules()
             protocol = Protocol::tcp;
             protFound = true;
         }
+		
         if(!protFound)
         {
             finder = currRule.find("udp");
@@ -124,8 +151,18 @@ void XMLParserIn::buildBinRules()
             }
             else
             {
+				if(finder != string::npos)
+				{	
+				finder = currRule.find("icmp");
                 protocol = Protocol::icmp;
+				}
+				else
+				{
+				cout<<"the protocol for a rule could not be found and was therefore set to all protocols"<<endl;	
+				protocol = Protocol::all;
+				}
             }
+			
         }
         
         //Need to search for srcipaddress
@@ -136,6 +173,14 @@ void XMLParserIn::buildBinRules()
             {
                 iptobin(ip);
             }
+			else
+			{
+			cout<<"srcipaddr was not specified for an incoming rule"<<endl;	
+			ips[0]=-1;
+			ips[1]=-1;
+			ips[2]=-1;
+			ips[3]=-1;
+			}
         }
         
         //Need to search for dstipaddress
@@ -146,6 +191,14 @@ void XMLParserIn::buildBinRules()
             {
                 iptobin(ip);
             }
+			else
+			{
+			cout<<"dstipaddr could not be found for a outgoing rule" <<endl;	
+			ips[0]=-1;
+			ips[1]=-1;
+			ips[2]=-1;
+			ips[3]=-1;
+			}
         }
         int srcportstartint=0;
         int srcportendint=0;
@@ -157,6 +210,11 @@ void XMLParserIn::buildBinRules()
             srcportstartint = temp;
             srcportstart = _decToBin.returnStr(temp, BIT_16);
         }
+		else
+		{
+		cout<<"srcportstart could not be found"<<endl;	
+		srcportstart = -1;
+		}
         
         //Need to find source port end
         srcPortDeleter = "srcportend='";
@@ -166,6 +224,11 @@ void XMLParserIn::buildBinRules()
             srcportendint = temp;
             srcportend = _decToBin.returnStr(temp, BIT_16);            
         }
+		else
+		{
+			cout<<"srcportend could not be found and was set to -1"<<endl;	
+			srcportend =-1;
+		}
         
         //Need to find dstportstart
         string dstPortDeleter = "dstportstart='";
@@ -177,6 +240,11 @@ void XMLParserIn::buildBinRules()
             destportstartint=temp;
             destportstart = _decToBin.returnStr(temp, BIT_16);
         }
+		else
+		{
+			cout<<"dstportstart could not be found and was set to -1"<<endl;	
+			destportstart=-1;
+		}
         int destportendint=0;
         //Need to find dstportend
         dstPortDeleter = "dstportend='";
@@ -186,6 +254,11 @@ void XMLParserIn::buildBinRules()
             destportendint =temp;
             destportend = _decToBin.returnStr(temp, BIT_16);
         }
+		else
+		{
+			cout<<"dstportend could not be found and was set to -1"<<endl;
+			destportend = -1;
+		}
         
         string wholeBinRule = "";
 	
@@ -222,7 +295,11 @@ bool XMLParserIn::deleter(string& find, string& currentRule,string &rulepiece)
             currentRule.erase(0, finder + 1);
             return true;
         }
-        else return false;
+        else 
+		{
+			return false;
+		}
+		
 }
 
 void XMLParserIn::iptobin(string &ip)

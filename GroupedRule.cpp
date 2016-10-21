@@ -154,8 +154,8 @@ const string GroupedRule::returnProt()
         }
         default:
         {
-            cout << "Error the switch is not working in grouped rule" << endl;
-            return "How those sausages, 5 minutes turkish";
+            cerr << "The switch working in grouped rule could not find a protocol match and the protocol was set to all" << endl;
+            return "all";
         }
     }
 }
