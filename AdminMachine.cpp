@@ -113,7 +113,7 @@ void AdminMachine::removeRedundancy(vector<vector<GroupedRule>>& _rules)
                _rule.GenericReturn(Field::protocolUpper) >= iter->GenericReturn(Field::protocolUpper) &&
                _rule.returnAction() == iter->returnAction())*/
                
-void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
+/*void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
 {
 	cout<<"rules.size(): "<<rules.size()<<endl;
     auto iter1 = rules.begin();
@@ -210,7 +210,7 @@ void AdminMachine::reduceByIP(vector<GroupedRule>& rules)
 		cout<<"iter1 increment"<<endl;
     }
 	cout<<"Size before print loop: "<<rules.size()<<endl;
-}
+}*/
 
 void AdminMachine::reduceUsingBDD(vector<GroupedRule>& rules)
 {
@@ -391,3 +391,46 @@ bool AdminMachine::groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2)
 						 return false;
 					 }
 }
+
+bool AdminMachine::ruleAllowed(string user, string password, GroupedRule _rule)
+{
+	int priority;
+	vector<GroupedRule>::iterator iterBegin;
+	vector<GroupedRule>::iterator iterEnd;
+	RangeHelper helper;
+	
+	if(username == "Barry")
+	{
+		priority = BarryPriorityLevel;
+	}
+	else if(username == "Larry")
+	{
+		priority = LarryPriorityLevel;
+	}
+	
+	
+	if(_rule.returnDirection() == Direction::in)
+	{
+		iterBegin = inRules.begin();
+		iterEnd = inRules.end();
+	}
+	else
+	{
+		iterBegin = outRules.begin();
+		iterEnd = outRules.end();
+	}
+	
+	while(iterBegin != iterEnd)
+	{
+		if(iterBegin->returnPriority() > priority)
+		{
+			if(groupedRuleEquivalence((*iterBegin),_rule))
+			{
+				return false;
+			}
+		}
+		
+		++iterBegin;
+	}
+		return true;
+	}
