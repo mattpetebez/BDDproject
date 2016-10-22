@@ -129,8 +129,8 @@ void XMLParserIn::buildBinRules()
 		}
 		else
 		{
-	//	cerr<<"the priority for a rule could not be found and was set by default to 500"<<endl;
-		intPriority =500;
+	//	cerr<<"the priority for a rule could not be found and was therefore not added"<<endl;
+		intPriority = 0;
 		}
         
         //Need to find protocol:
@@ -175,7 +175,7 @@ void XMLParserIn::buildBinRules()
             }
 			else
 			{
-			cout<<"srcipaddr was not specified for an incoming rule"<<endl;	
+			//cout<<"srcipaddr was not specified for an incoming rule"<<endl;	
 			ips[0]=-1;
 			ips[1]=-1;
 			ips[2]=-1;
@@ -193,7 +193,7 @@ void XMLParserIn::buildBinRules()
             }
 			else
 			{
-			cout<<"dstipaddr could not be found for a outgoing rule" <<endl;	
+			//cout<<"dstipaddr could not be found for a outgoing rule" <<endl;	
 			ips[0]=-1;
 			ips[1]=-1;
 			ips[2]=-1;
