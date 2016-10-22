@@ -93,7 +93,7 @@ void XMLParserIn::buildBinRules()
         }
 		else
 		{
-			cerr<<"accept or drop was not found for a rule and was set by default to accept"<<endl;
+		//	cerr<<"accept or drop was not found for a rule and was set by default to accept"<<endl;
 			action = Action::accept;
 		}
 		}
@@ -115,7 +115,7 @@ void XMLParserIn::buildBinRules()
 			}
 			else
 			{
-			cerr<<"direction='out' or direction='in' was not found for a rule and was set by default to in"<<endl;
+	//		cerr<<"direction='out' or direction='in' was not found for a rule and was set by default to in"<<endl;
 			direction = Direction::in;
 			}
         }
@@ -129,7 +129,7 @@ void XMLParserIn::buildBinRules()
 		}
 		else
 		{
-		cerr<<"the priority for a rule could not be found and was set by default to 500"<<endl;
+	//	cerr<<"the priority for a rule could not be found and was set by default to 500"<<endl;
 		intPriority =500;
 		}
         
@@ -158,7 +158,7 @@ void XMLParserIn::buildBinRules()
 				}
 				else
 				{
-				cout<<"the protocol for a rule could not be found and was therefore set to all protocols"<<endl;	
+		//		cout<<"the protocol for a rule could not be found and was therefore set to all protocols"<<endl;	
 				protocol = Protocol::all;
 				}
             }
@@ -212,7 +212,7 @@ void XMLParserIn::buildBinRules()
         }
 		else
 		{
-		cout<<"srcportstart could not be found"<<endl;	
+	//	cout<<"srcportstart could not be found"<<endl;	
 		srcportstart = -1;
 		}
         
@@ -226,7 +226,7 @@ void XMLParserIn::buildBinRules()
         }
 		else
 		{
-			cout<<"srcportend could not be found and was set to -1"<<endl;	
+	//		cout<<"srcportend could not be found and was set to -1"<<endl;	
 			srcportend =-1;
 		}
         
@@ -242,7 +242,7 @@ void XMLParserIn::buildBinRules()
         }
 		else
 		{
-			cout<<"dstportstart could not be found and was set to -1"<<endl;	
+//			cout<<"dstportstart could not be found and was set to -1"<<endl;	
 			destportstart=-1;
 		}
         int destportendint=0;
@@ -256,7 +256,7 @@ void XMLParserIn::buildBinRules()
         }
 		else
 		{
-			cout<<"dstportend could not be found and was set to -1"<<endl;
+//			cout<<"dstportend could not be found and was set to -1"<<endl;
 			destportend = -1;
 		}
         

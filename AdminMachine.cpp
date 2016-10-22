@@ -399,11 +399,11 @@ bool AdminMachine::ruleAllowed(string user, string password, GroupedRule _rule)
 	vector<GroupedRule>::iterator iterEnd;
 	RangeHelper helper;
 	
-	if(username == "Barry")
+	if(user == "Barry")
 	{
 		priority = BarryPriorityLevel;
 	}
-	else if(username == "Larry")
+	else if(user == "Larry")
 	{
 		priority = LarryPriorityLevel;
 	}

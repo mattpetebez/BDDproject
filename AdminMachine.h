@@ -19,6 +19,7 @@ public:
     void startLogin(string& username, string& hashedPassword);
     void populateRules();
 	void reduceUsingBDD(vector<GroupedRule>& rules);
+	bool ruleAllowed(string user, string password, GroupedRule _rule);
 private:
 //Maybe need to consider a sort by priority?
 	void removeRedundancy(vector<vector<GroupedRule>>& _rules);
@@ -27,7 +28,7 @@ private:
 	vector<GroupedRule> rebuildRules(vector<vector<GroupedRule>>& rules);
 	void removeCopies(vector<GroupedRule>& rules);
 	bool groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2);
-	bool ruleAllowed(string user, string password, GroupedRule _rule);
+
     vector<GroupedRule> inRules;
     vector<GroupedRule> outRules;
     vector<vector<GroupedRule>> groupByPriority(vector<GroupedRule>&);
