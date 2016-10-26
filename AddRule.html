@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form action="/cgi-bin/buttonHandler.sh" >
+<h1>Autofirewall Admin 3000nator!!!</h1>
+  Username:<br>
+  <input type="text" name="Username" value="">
+  <br>
+  Password:<br>
+  <input type="password" name="Password" value="">
+  <br>
+
+ Input a Destination Start Port:<br>
+  <input type="text" name="deststartport" value="">
+  <br>
+
+ Input a Destination End Port:<br>
+  <input type="text" name="destendport" value="">
+  <br>
+
+ Input a Source Start Port:<br>
+  <input type="text" name="srcstartport" value="">
+  <br>
+
+ Input a Source End Port:<br>
+  <input type="text" name="srcendport" value="">
+  <br>
+
+Input a Ip Range Start:<br>
+  <input type="text" name="ipstart1" value="">
+  <input type="text" name="ipstart2" value="">
+  <input type="text" name="ipstart3" value="">
+  <input type="text" name="ipstart4" value="">
+  <br>
+
+ Input a Ip Range End:<br>
+  <input type="text" name="ipend1" value="">
+  <input type="text" name="ipend2" value="">
+  <input type="text" name="ipend3" value="">
+  <input type="text" name="ipend4" value="">
+  <br>
+
+<br>
+Select the action you require for your firewall rule.<br>
+  <input type="radio" name="AcceptOrDeny" value="accept" checked> Accept <br>
+  <input type="radio" name="AcceptOrDeny" value="drop" checked> Drop <br>
+Select the priority you require for your firewall rule.<br>
+  <input type="radio" name="Priority" value="100" checked> Priority 100 <br>
+  <input type="radio" name="Priority" value="200" checked> Priority 200  <br>
+  <input type="radio" name="Priority" value="300" checked> Priority 300  <br>
+  <input type="radio" name="Priority" value="400" checked> Priority 400  <br>
+  <input type="radio" name="Priority" value="500" checked> Priority 500  <br>
+  <input type="radio" name="Priority" value="600" checked> Priority 600  <br>
+  <input type="radio" name="Priority" value="700" checked> Priority 700  <br>
+  <input type="radio" name="Priority" value="800" checked> Priority 800  <br>
+  <input type="radio" name="Priority" value="900" checked> Priority 900  <br>
+  <input type="radio" name="Priority" value="1000" checked> Priority 1000  <br>
+Select whether your rule must be applied to incoming or outgoing traffic.<br>
+  <input type="radio" name="InOrOut" value="in" checked> Incoming Rule <br>
+  <input type="radio" name="InOrOut" value="out" checked> Outgoing Rule <br>
+Select the rules protocol.<br>
+  <input type="radio" name="Protocol" value="udp" checked> UDP <br>
+  <input type="radio" name="Protocol" value="icmp" checked> ICMP <br>
+  <input type="radio" name="Protocol" value="tcp" checked> TCP <br>
+  <input type="submit" name="submit" value="Submit">
+</form>
+</body>
+</html>

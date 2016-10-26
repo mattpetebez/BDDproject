@@ -168,7 +168,7 @@ void XMLParserOut::ruleCreater()
 
 void XMLParserOut::printoutputRule(string& username)
 {
-    ofstream xmlOutputRules("/home/matt/" + username + "-Rules.xml");
+    ofstream xmlOutputRules("/home/tyron/" + username + "-Rules-File.xml");
 	if (xmlOutputRules.is_open())
 	{
 		xmlOutputRules << "<filter name='"+username+"-rules' chain='root'>\n";

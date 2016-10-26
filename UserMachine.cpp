@@ -3,7 +3,7 @@
 UserMachine::UserMachine(string& _username)
 {
     username = _username;
-    string UserRulesFile = "/home/matt/" +username+"-Rules.xml";
+    string UserRulesFile = username+"-Rules-File.xml";
     XMLParserIn inparser(UserRulesFile);
     inparser.buildInOutRules(inRules, outRules);
 }

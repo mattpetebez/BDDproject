@@ -11,6 +11,11 @@ HTMLBuilder::~HTMLBuilder()
 {
 }
 
+HTMLBuilder::HTMLBuilder()
+{
+	
+}
+
 void HTMLBuilder::buildHTML()
 {
     switch(type)
@@ -57,6 +62,29 @@ void HTMLBuilder::printActualRules()
     
     ofstream outfile;
     outfile.open("/var/www/html/UserRulesFiles/"+user+"-ActualRules.html");
+    outfile << html;
+    outfile.close();
+}
+
+void HTMLBuilder::allowedRules(vector<GroupedRule> _allowedRules, string _user)
+{
+	string html = "<!DOCTYPE html>\n<html>\n<head>\n<h1>\nHello " + _user
+    +": The rules successfully added to your rule list are \n</h1>\n</head>\n\n<body>";
+    if(!_allowedRules.empty())
+	{
+		for(auto i: _allowedRules)
+		{
+			html+= "<p>"+i.returnHTMLRule()+"</p>\n";
+		}
+	}
+	else
+	{
+		html+= "<p>No rules were allowed</p>\n";
+	}
+    html+= "</body>\n\n</html>";
+    
+    ofstream outfile;
+    outfile.open("/var/www/html/"+_user+"-AllowedRules.html");
     outfile << html;
     outfile.close();
 }

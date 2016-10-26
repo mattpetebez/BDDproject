@@ -14,8 +14,10 @@ class HTMLBuilder
 {
 public:
     HTMLBuilder(string& _user, HTMLType _type, vector<GroupedRule> _rules);
+	HTMLBuilder();
     ~HTMLBuilder();
     void buildHTML();
+	void allowedRules(vector<GroupedRule> _rules, string _user);
 private: 
     void printFileRules();
     void printActualRules();

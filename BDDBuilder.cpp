@@ -24,14 +24,14 @@ void BDDBuilder::buildBDD()
         vector<string> currStrRule = (*rulesIter).returnBinRule();
         
         int action = (*rulesIter).returnAction();
-        cout<<"action: "<<action<<endl;
+        //cout<<"action: "<<action<<endl;
         vector<string>::iterator binIter = currStrRule.begin();
         while(binIter != currStrRule.end())
         {
             curr = Cudd_ReadOne(manager);
             Cudd_Ref(curr);
             ruleCharIter = (*binIter).begin();
-            cout<<(*binIter)<<endl;
+          //  cout<<(*binIter)<<endl;
             count++;
             nodeRef = 0;
             debugCount =0;

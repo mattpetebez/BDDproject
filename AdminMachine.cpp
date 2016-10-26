@@ -2,7 +2,7 @@
 //Lekker
 AdminMachine::AdminMachine()
 {
-    string filename = "/home/matt/Admin-Rules.xml";
+    string filename = "Admin-Rules-File.xml";
     XMLParserIn inparser(filename);
     inparser.buildInOutRules(inRules, outRules);
     reverse(inRules.begin(),inRules.end()); 
@@ -299,7 +299,7 @@ bool AdminMachine::groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2)
 vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, GroupedRule _rule)
 {
     ifstream infile;
-    infile.open("/home/BDDproject/Userlist");
+    infile.open("Userlist");
     vector<GroupedRule> exceptedRules;
     if(!infile)
     {
@@ -329,13 +329,17 @@ vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, Grou
         }
         else
         {
+			cout<<"Unexceptable about to be popultated"<<endl;
             vector<GroupedRule> UnExceptable;
 
             UnExceptable = populateUnExceptable(_rule.returnDirection(), priority);
-
+			
+			cout<<"Unexceptable popultated"<<endl;
+			
             BDDnavigator navigator(_rule,UnExceptable);
+						
             exceptedRules = navigator.returnExceptedRules();
-            
+            cout<<"Navigator finished"<<endl;
         }
         
         return exceptedRules;

@@ -26,8 +26,7 @@ void BDDnavigator::initialise()
     unExceptableRulesBDD.buildBDD();
 
     head = unExceptableRulesBDD.returnHead();    
-    string test = "/home/matt/TestBDDNavigator";
-    unExceptableRulesBDD.printBDD(test);
+
 }
 
 void BDDnavigator::findBinExceptedRules()
