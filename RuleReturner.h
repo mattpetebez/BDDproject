@@ -2,7 +2,7 @@
 #include "GroupedRule.h"
 #include "cudd.h"
 #include <vector>
-
+#include "TwoRanger.h"
 using namespace std;
 
 #ifndef RULERETURNER_H
@@ -41,11 +41,13 @@ public:
     ~RuleReturner();
     bool validNoRules();
     vector<GroupedRule> returnRules();
+    void populateGroupedRules();
 private:
     void findBddRules(BDDit tracker);
     void startRuleReturn();
     DdNode * current;
-    vector<GroupedRule> rules;
+   vector<GroupedRule> gRules;
+    vector<string> rules;
     BDDit iter;
     Direction direction;
 	int priority;

@@ -5,10 +5,11 @@ GroupedRule::GroupedRule()
 {
     
 }
-GroupedRule::GroupedRule(Direction _direction, string _binRule, int _priority)
+GroupedRule::GroupedRule(Direction _direction, string _binRule, int _priority, Action _action)
 {
     direction = _direction;
 	priority = _priority;
+    action = _action;
     string protocolTemp = _binRule.substr(0, 8);
     if(isAllMasked(protocolTemp))
     {
@@ -86,7 +87,8 @@ GroupedRule::GroupedRule(Direction _direction, string _binRule, int _priority)
     {
         checkForTwoRange(ip4Upper, ip4Lower, ip4Temp);
     }
-
+    
+    binRule = returnRangedBinRule();
     //priority = DEFAULT_PRIORITY;
 }
 
@@ -101,6 +103,11 @@ GroupedRule::GroupedRule(Action _action, int _priority, Direction _direction, st
 int GroupedRule::returnAction()
 {
     return (int)action;
+}
+
+Action GroupedRule::returnActionEnum()
+{
+    return action;
 }
 
 GroupedRule::GroupedRule(Protocol _protocol,int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,int _ip1,int _ip2,
@@ -154,7 +161,7 @@ const string GroupedRule::returnProt()
         }
         default:
         {
-            cerr << "The switch working in grouped rule could not find a protocol match and the protocol was set to all" << endl;
+            //cerr << "The switch working in grouped rule could not find a protocol match and the protocol was set to all" << endl;
             return "all";
         }
     }
@@ -227,6 +234,7 @@ const vector<string> GroupedRule::returnRangedBinRule()
     
     string ip = converter.returnStr(ip1Lower, 8) + converter.returnStr(ip2Lower, 8) + converter.returnStr(ip3Lower, 8) + converter.returnStr(ip4Lower, 8);
     
+    
     for(int i = srcPortStart; i <= srcPortEnd; i++)
     {
         string currRule = "";
@@ -259,6 +267,7 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
       
             while(binIter != binaryRule.end())
             {
+    
                 if((*binIter) == '1')
                 {
                     binUpper += '1';
@@ -291,6 +300,15 @@ void GroupedRule::debugReturnEnglishRule()
 {
     cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
  << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << " Priority: "<< returnPriority()<<endl; 
+}
+
+string GroupedRule::returnHTMLRule()
+{
+    
+    string htmlRule =  "Protocol: " + returnProt() + " srcportrange: " + to_string(srcPortStart) + "-" + to_string(srcPortEnd) + " dstportrange: "
+ + to_string(destPortStart) + "-" + to_string(destPortEnd) + " IP: " + returnWholeIP() + " Priority: " + to_string(returnPriority())+"\n";
+    return htmlRule;
+ 
 }
 GroupedRule GroupedRule::deepcopy()
 {

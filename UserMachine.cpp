@@ -1,59 +1,69 @@
 #include "UserMachine.h"
 
-UserMachine::UserMachine(string _username)
+UserMachine::UserMachine(string& _username)
 {
     username = _username;
-    string UserRulesFile = username+"-rules.xml";
+    string UserRulesFile = "/home/matt/" +username+"-Rules.xml";
     XMLParserIn inparser(UserRulesFile);
     inparser.buildInOutRules(inRules, outRules);
 }
 
 UserMachine::~UserMachine()
 {
-	vector<GroupedRule> inoutRules;
-    inoutRules.insert(inoutRules.end(), inRules.begin(), inRules.end());
-//	vector<GroupedRule> temp;
-//	for(auto i : outRules)
-//	{
-//		i.setDirection(Direction::out);
-//		temp.push_back(i);
-//	}
-    inoutRules.insert(inoutRules.end(),outRules.begin(),outRules.end());
-	username="user2";
+    vector<GroupedRule> inoutRules;
+    if(!inRules.empty())
+    {
+        inoutRules.insert(inoutRules.end(), inRules.begin(), inRules.end());
+    }
+    if(!outRules.empty())
+    {
+        vector<GroupedRule> temp;
+        for(auto i : outRules)
+        {
+            i.setDirection(Direction::out);
+            temp.push_back(i);
+            
+        }
+        inoutRules.insert(inoutRules.end(),temp.begin(),temp.end());
+    }
+
 	XMLParserOut out;
     out.parseOutGroupedRules(inoutRules, username);
 }
 
-bool UserMachine::addRule(GroupedRule& _rule)
+bool UserMachine::addRule(vector<GroupedRule>& _rule)
 {
-    if(_rule.returnDirection() == Direction::in)
+    if(_rule.at(0).returnDirection() == Direction::in)
     {
-        inRules.push_back(_rule);
+        inRules.insert(inRules.end(), _rule.begin(),_rule.end());
         BDDBuilder builder(inRules);
         builder.buildBDD();
         
         RuleReturner returner(builder.returnHead(), Direction::in);
-        inRules = returner.returnRules();
-        
+        vector<GroupedRule> temp;
+        temp = returner.returnRules();
+        inRules = temp;
         GroupedRuleSorter sorter(inRules);
         inRules = sorter.sortRules();
+       
         
     }
     
-    else if(_rule.returnDirection() == Direction::out)
+    else if(_rule.at(0).returnDirection() == Direction::out)
     {
-        outRules.push_back(_rule);
+        outRules.insert(outRules.end(), _rule.begin(),_rule.end());
         BDDBuilder builder(outRules);
         builder.buildBDD();
         
         RuleReturner returner(builder.returnHead(), Direction::out);
-        outRules = returner.returnRules();
-        
+        vector<GroupedRule> temp;
+        temp = returner.returnRules();
+        outRules = temp;
 		
         GroupedRuleSorter sorter(outRules);
         outRules = sorter.sortRules();
-        
     }
+    return true;
 }
 
 bool UserMachine::deleteRule(GroupedRule& rule)//Might also need to consider a multi delete function
@@ -107,10 +117,6 @@ bool UserMachine::deleteRule(GroupedRule& rule)//Might also need to consider a m
 				{
 					cout<<"true out"<<endl;
 					outRules.erase(iterBegin);
-				}
-				for(auto i: inRules)
-				{
-					i.debugReturnEnglishRule();
 				}
 				return true;
             }

@@ -6,6 +6,7 @@ RuleReturner::RuleReturner(DdNode* head, Direction _direction)
     current = head;
     direction = _direction;
 	priority = 500;
+
 }
 RuleReturner::RuleReturner(DdNode* head, Direction _direction, int _priority)
 {
@@ -22,7 +23,9 @@ RuleReturner::~RuleReturner()
 vector<GroupedRule> RuleReturner::returnRules()
 {
     startRuleReturn();
-    return rules;
+    populateGroupedRules();
+    cout << "rules.size() in RuleReturner before returning rules: " << rules.size() << endl;
+    return gRules;
 }
 
 void RuleReturner::startRuleReturn()
@@ -45,9 +48,11 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             tracker.appendRule(one);
         }
-        GroupedRule gRule(direction, tracker.returnWholeRule(), priority);
-        rules.push_back(gRule);
-
+        
+        //GroupedRule gRule(direction, tracker.returnWholeRule(), priority, Action::accept);
+        
+        //gRule.debugReturnEnglishRule();
+        rules.push_back(tracker.returnWholeRule());
         return;
     }
     else
@@ -58,8 +63,9 @@ void RuleReturner::findBddRules(BDDit tracker)
             {
                 BDDit branchTracker = tracker;
                 branchTracker.appendRule(zero);
-                GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority);
-                rules.push_back(gRule);
+               // GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority, Action::accept);
+              //  gRule.debugReturnEnglishRule();
+                rules.push_back(branchTracker.returnWholeRule());
             }
             tracker.appendRule(one);
             tracker.setCurr(tracker.returnThenChild());
@@ -97,8 +103,9 @@ void RuleReturner::findBddRules(BDDit tracker)
         {
             BDDit branchTracker = tracker;
             branchTracker.appendRule(one);
-            GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority);
-            rules.push_back(gRule);
+           // GroupedRule gRule(direction, branchTracker.returnWholeRule(), priority, Action::accept);
+            //gRule.debugReturnEnglishRule();
+            rules.push_back(branchTracker.returnWholeRule());
             
             tracker.appendRule(zero);
             tracker.setCurr(tracker.returnElseChild());
@@ -208,4 +215,21 @@ const string BDDit::returnWholeRule()
 void BDDit::appendRule(char _rule)
 {
     rule.at(Cudd_NodeReadIndex(curr)) = _rule;
+}
+
+void RuleReturner::populateGroupedRules()
+{
+    TwoRanger ranger(rules);
+    for(auto i: rules)
+    {
+        cout<<i<<endl;
+    }
+    rules = ranger.returnNewRules();
+    
+    for(auto i: rules)
+    {
+        GroupedRule temp(direction, i, priority, Action::accept);
+        gRules.push_back(temp);
+    }
+    
 }

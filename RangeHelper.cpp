@@ -79,6 +79,5 @@ void RangeHelper::returnVectorRangedRules(vector<GroupedRule>& _rules)
             ++it;
         }
     }
-    
     _rules.insert(_rules.end(), appendVec.begin(), appendVec.end());
 }

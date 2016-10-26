@@ -3,6 +3,7 @@
 XMLParserIn::XMLParserIn(string& _filename)
 {
     filename = _filename;
+    cout << "Filename: " << filename << endl;
 }
 
 XMLParserIn::~XMLParserIn()
@@ -28,11 +29,17 @@ void XMLParserIn::buildStringRules()
     ifstream infile;
 
     infile.open(filename);
+    if(infile)
     {
         while(getline(infile, line))
         {
             allRules += line;
         }
+    }
+    else
+    {
+        cout <<"Error: incorrect input file name." << endl;
+        return;
     }
 	infile.close();
 
@@ -76,8 +83,6 @@ void XMLParserIn::buildBinRules()
         bool protFound = false;
         size_t finder;
         string currRule = *iter;
-        
-        
         //Finding action:
         finder = currRule.find("accept");
         if(finder != string::npos)
@@ -111,18 +116,17 @@ void XMLParserIn::buildBinRules()
 			finder = currRule.find("direction='out'");
 			if(finder != string::npos)
 			{
-			direction = Direction::out;
+                direction = Direction::out;
 			}
 			else
 			{
-	//		cerr<<"direction='out' or direction='in' was not found for a rule and was set by default to in"<<endl;
-			direction = Direction::in;
+                direction = Direction::inout;
 			}
         }
         
         //Need to find priority:
         string priorityDeleter = "priority='";
-		int intPriority = 0;
+		int intPriority = -1;
         if(deleter(priorityDeleter,currRule,priority))
 		{
         intPriority = atoi(priority.c_str());
@@ -130,7 +134,7 @@ void XMLParserIn::buildBinRules()
 		else
 		{
 	//	cerr<<"the priority for a rule could not be found and was therefore not added"<<endl;
-		intPriority = 0;
+		intPriority = -1;
 		}
         
         //Need to find protocol:
@@ -237,7 +241,7 @@ void XMLParserIn::buildBinRules()
         if(deleter(dstPortDeleter, currRule, destportstart))
         {
             int temp = atoi(destportstart.c_str());
-            destportstartint=temp;
+            destportstartint = temp;
             destportstart = _decToBin.returnStr(temp, BIT_16);
         }
 		else
@@ -251,7 +255,7 @@ void XMLParserIn::buildBinRules()
         if(deleter(dstPortDeleter, currRule, destportend))
         {
             int temp = atoi(destportend.c_str());
-            destportendint =temp;
+            destportendint = temp;
             destportend = _decToBin.returnStr(temp, BIT_16);
         }
 		else
@@ -263,21 +267,22 @@ void XMLParserIn::buildBinRules()
         string wholeBinRule = "";
 	
         GroupedRule binRule(protocol, srcportstartint,srcportendint,destportstartint,destportendint,ips[0],ips[1],ips[2],ips[3],intPriority,direction,action);
-       
-	   if(direction == Direction::in)
-        {
-			if(intPriority!=0)
-            inRules.push_back(binRule);
-			
-			//binRule.debugReturnEnglishRule();
-        }
-        else
-        {
-			if(intPriority!=0)
-            outRules.push_back(binRule);
-			
-			//binRule.debugReturnEnglishRule();
-        }
+       if(direction != Direction::inout)
+       {
+           if(direction == Direction::in)
+            {
+                if(intPriority!=0)
+                inRules.push_back(binRule);
+                
+                //binRule.debugReturnEnglishRule();
+            }
+            else
+            {
+                if(intPriority!=0)
+                outRules.push_back(binRule);        
+                //binRule.debugReturnEnglishRule();
+            }
+       }
         ++iter;
     }
     

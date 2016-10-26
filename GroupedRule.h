@@ -18,7 +18,8 @@ enum class Action
 enum class Direction
 {
     in=1,
-    out
+    out,
+    inout
 };
 enum class Protocol
 {
@@ -59,11 +60,11 @@ class GroupedRule
 public:
     GroupedRule();//Not sure if needed
     ~GroupedRule();
-    
+    Action returnActionEnum();
     GroupedRule(Protocol _protocol, int _srcPortStart,int _srcPortEnd,int _destPortStart,int _destPortEnd,
     int _ip1,int _ip2,int _ip3, int _ip4,int _priority, Direction _direction, Action accept_deny); //Used for parser in
     
-    GroupedRule(Direction _direction, string _binRule, int _priority);//Needed for rule returner;
+    GroupedRule(Direction _direction, string _binRule, int _priority, Action _action);//Needed for rule returner;
     
     GroupedRule(Action accept_deny, int _priority, Direction _direction, string wholeBinRule);//Not sure if needed;
     int returnAction();
@@ -72,7 +73,7 @@ public:
     const string returnProt();
 
     vector<GroupedRule> returnRangedGroup();
-    
+    string returnHTMLRule();
     bool isAllMasked(string& _binRule);
     
     bool isRanged();
@@ -89,6 +90,7 @@ public:
     void setDirection(Direction);
     void GenericSet(Field _field, int _value);
     int GenericReturn(Field _field);
+    
 private:
     void createBinRule();
     void extractRule(string& rule);

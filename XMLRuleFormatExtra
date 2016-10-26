@@ -1,0 +1,12 @@
+  <rule action='accept' direction='in' priority='222'>
+    <tcp srcipaddr='146.141.177.27' srcipmask='24'/>
+  </rule>
+  <rule action='accept' direction='in' priority='111'>
+    <tcp srcipaddr='146.141.177.27' srcipmask='16' dstportstart='80'/>
+  </rule>
+  <rule action='accept' direction='in' priority='555'>
+    <tcp srcipaddr='105.227.134.158' srcipmask='8' dstportstart='80'/>
+  </rule>
+  <rule action='drop' direction='in' priority='777'>
+    <all/>
+  </rule>

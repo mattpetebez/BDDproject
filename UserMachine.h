@@ -15,10 +15,10 @@ using namespace std;
 class UserMachine
 {
 public:
-    UserMachine(string _username);
+    UserMachine(string& _username);
     ~UserMachine();
     
-    bool addRule(GroupedRule&);
+    bool addRule(vector<GroupedRule>& );
     bool deleteRule(GroupedRule&);
 	bool groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2);
 private:

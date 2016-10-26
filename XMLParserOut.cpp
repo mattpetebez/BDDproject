@@ -7,7 +7,7 @@ XMLParserOut::XMLParserOut()
 void XMLParserOut::parseOutGroupedRules(vector<GroupedRule> _rules, string& username)
 {
     outRules = _rules;
-    expandRangedRules();
+    //expandRangedRules();
     sortAscendingIP();
     sortIP(Field::ip4Upper, outRules);
     ruleCreater();
@@ -148,7 +148,7 @@ void XMLParserOut::ruleCreater()
         string sourceportstart = "''"; 
         if(iter->GenericReturn(Field::srcportend) != MASKED_VALUE)
         {
-         sourceportstart = "'"+to_string(iter->GenericReturn(Field::srcportend))+"'";//no range implementation yet
+         sourceportstart = "'"+to_string(iter->GenericReturn(Field::srcportstart))+"'";//no range implementation yet
         }
         
         string sourceportend = "''";//no range implementation yet
@@ -157,8 +157,8 @@ void XMLParserOut::ruleCreater()
         sourceportend = "'"+to_string(iter->GenericReturn(Field::srcportend))+"'";//no range implementation yet
         }
         
-        wholerule = ruleaction+direct+priority+">\n<"+protocol+ip+dstportstart+destportstart
-        +dstportend+destportend+srcportstart+sourceportstart+srcportend+sourceportend+"/"+">\n"+endrule;
+        wholerule = ruleaction+direct+priority+">\n<"+protocol+ip+srcportstart+sourceportstart+srcportend+sourceportend+dstportstart+destportstart
+        +dstportend+destportend+"/"+">\n"+endrule;
         xmlrules.push_back(wholerule);
         
         direct = " direction=";
@@ -168,7 +168,7 @@ void XMLParserOut::ruleCreater()
 
 void XMLParserOut::printoutputRule(string& username)
 {
-    ofstream xmlOutputRules("/home/tyron/" + username + "-rules.xml");
+    ofstream xmlOutputRules("/home/matt/" + username + "-Rules.xml");
 	if (xmlOutputRules.is_open())
 	{
 		xmlOutputRules << "<filter name='"+username+"-rules' chain='root'>\n";
@@ -180,7 +180,7 @@ void XMLParserOut::printoutputRule(string& username)
         xmlOutputRules << "</filter>";
 		xmlOutputRules.close();
 	}
-    else cerr << "Could not open file!" << endl;
+    else cerr << "Could not open file! in XMLparserout" << endl;
 }
 
 void XMLParserOut::sortAscendingIP()

@@ -23,16 +23,17 @@ int main()
     
     XMLParserIn xmlparserin(filename);
     xmlparserin.buildInOutRules(inRules, outRules);
-
-
+    for(auto i: inRules)
+    {
+        i.debugReturnEnglishRule();
+    }
     BDDBuilder BDDin(inRules);
     
     BDDin.buildBDD();
     
-    string inBDDGraph = "/home/matt/Documents/inBDDBgraph";
+    string inBDDGraph = "/home/matt/LekkerMan";
    
-
-     BDDin.printBDD(inBDDGraph);
+    BDDin.printBDD(inBDDGraph);
 
     RuleReturner inRuleReturner(BDDin.returnHead(), Direction::in);
     
@@ -43,9 +44,9 @@ int main()
     }
     
     GroupedRuleSorter inSorter(inRules);
-    vector<GroupedRule> inRulesTemp;
-    inRulesTemp = inSorter.sortRules();
-    inRules = inRulesTemp;
+//    vector<GroupedRule> inRulesTemp;
+//    inRulesTemp = inSorter.sortRules();
+    inRules = inSorter.sortRules();
 
     XMLParserOut out;
     string username = "Barry";
