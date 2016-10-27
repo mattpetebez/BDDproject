@@ -28,6 +28,12 @@ void HTMLBuilder::buildHTML()
         case HTMLType::viewFileRules:
         {
             printFileRules();
+            break;
+        }
+        case HTMLType::deleteRule:
+        {
+            printDeleteRulePage();
+            break;
         }
     }    
 }
@@ -85,6 +91,34 @@ void HTMLBuilder::allowedRules(vector<GroupedRule> _allowedRules, string _user)
     
     ofstream outfile;
     outfile.open("/var/www/html/"+_user+"-AllowedRules.html");
+   // cout<<"html file created"<<endl;
     outfile << html;
     outfile.close();
+}
+
+void HTMLBuilder::printDeleteRulePage()
+{
+    string page= "<!DOCTYPE html>\n<html>\n<head><form action=\"/cgi-bin/deleteRuleHandler.sh\">\n<h1>\nHello "+user+": Please select a rule to delete below:\n</h1>\n</head>\n\n<body>\n";
+    
+    
+    string radioButtons = "";
+    int count = 1;
+    for(auto i: rules)
+    {
+        radioButtons+= "<input type=\"radio\" name=\"groupedrulenumber\" value=\""+to_string(count)+"\"";
+        if(count == 1)
+            {
+                radioButtons+=" checked";
+            }
+            radioButtons+= "> " +i.returnHTMLRule()+"</br>\n";
+            count++;
+    }
+    page += radioButtons;
+    page += "<input type=\"submit\" name=\""+user+"\" value=\"Submit\"/>\n";
+    page +="</form>\n</body>\n</html>";
+    
+    ofstream deleteRulePageFile;
+    deleteRulePageFile.open("/var/www/html/"+user+"-deleteRule.html");
+    deleteRulePageFile << page;
+    deleteRulePageFile.close();
 }

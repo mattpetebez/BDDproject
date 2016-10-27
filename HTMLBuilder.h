@@ -7,7 +7,8 @@
 enum class HTMLType
 {
   viewFileRules = 1,
-  viewActualRules
+  viewActualRules,
+  deleteRule
 };
 
 class HTMLBuilder
@@ -21,6 +22,7 @@ public:
 private: 
     void printFileRules();
     void printActualRules();
+    void printDeleteRulePage();
 
     HTMLType type;
     string user;
