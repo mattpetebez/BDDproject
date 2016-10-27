@@ -26,6 +26,7 @@ UserMachine::~UserMachine()
         }
         inoutRules.insert(inoutRules.end(),temp.begin(),temp.end());
     }
+	string UserRulesFile = username+"-Rules-File.xml";
 
 	XMLParserOut out;
     out.parseOutGroupedRules(inoutRules, username);
@@ -33,35 +34,88 @@ UserMachine::~UserMachine()
 
 bool UserMachine::addRule(vector<GroupedRule>& _rule)
 {
+	
+	
     if(_rule.at(0).returnDirection() == Direction::in)
     {
-        inRules.insert(inRules.end(), _rule.begin(),_rule.end());
-        BDDBuilder builder(inRules);
-        builder.buildBDD();
-        
-        RuleReturner returner(builder.returnHead(), Direction::in);
-        vector<GroupedRule> temp;
-        temp = returner.returnRules();
-        inRules = temp;
-        GroupedRuleSorter sorter(inRules);
-        inRules = sorter.sortRules();
-       
-        
-    }
-    
+		for(auto i: _rule)
+		{
+			if(inRules.empty() && i.returnActionEnum() == Action::deny)
+			{
+				return false;
+			}
+			else
+			{
+				RangeHelper helper;
+				vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(i);
+				for(auto k: expandedRequestedRule)
+				{
+					vector<string> temp = k.returnRangedBinRule();
+					for(auto j: temp)
+					{
+						GroupedRule tempGrule(i.returnDirection(), j, i.returnPriority(), i.returnActionEnum());
+						inRules.push_back(tempGrule);
+					}
+					temp.clear();
+				}
+			}
+		}
+				BDDBuilder builder(inRules);
+				if(builder.buildBDD())
+				{
+					RuleReturner returner(builder.returnHead(), Direction::in);
+					vector<GroupedRule> temp;
+					temp = returner.returnRules();
+					inRules = temp;
+					GroupedRuleSorter sorter(inRules);
+					inRules = sorter.sortRules();
+				}
+				else
+				{
+					inRules.clear();
+				}
+				
+				return true;
+	}
+	
     else if(_rule.at(0).returnDirection() == Direction::out)
     {
-        outRules.insert(outRules.end(), _rule.begin(),_rule.end());
-        BDDBuilder builder(outRules);
-        builder.buildBDD();
-        
-        RuleReturner returner(builder.returnHead(), Direction::out);
-        vector<GroupedRule> temp;
-        temp = returner.returnRules();
-        outRules = temp;
-		
-        GroupedRuleSorter sorter(outRules);
-        outRules = sorter.sortRules();
+		for(auto i: _rule)
+		{
+			if(outRules.empty() && i.returnActionEnum() == Action::deny)
+			{
+				return false;
+			}
+			else
+			{
+				RangeHelper helper;
+				vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(i);
+				for(auto k: expandedRequestedRule)
+				{
+					vector<string> temp = k.returnRangedBinRule();
+					for(auto j: temp)
+					{
+						GroupedRule tempGrule(i.returnDirection(), j, i.returnPriority(), i.returnActionEnum());
+						outRules.push_back(tempGrule);
+					}
+					temp.clear();
+				}
+			}
+		}
+				BDDBuilder builder(outRules);
+				if(builder.buildBDD())
+				{
+					RuleReturner returner(builder.returnHead(), Direction::in);
+					vector<GroupedRule> temp;
+					temp = returner.returnRules();
+					outRules = temp;
+					GroupedRuleSorter sorter(outRules);
+					outRules = sorter.sortRules();
+				}
+				else
+				{
+					outRules.clear();
+				}
     }
     return true;
 }

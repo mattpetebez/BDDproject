@@ -21,18 +21,15 @@ enum class response
 
 int main(int argc, char* argv[])
 {
-	cout<<"running"<<endl;
 	HTMLBuilder builder; 
 	
     if(argc == 1)
     {
-		cout<<"Lekker man";
         return (int)response::noArgs;
     }
     
     else
     {
-		cout<<"we are here"<<endl;
         string username = argv[1];
         string password = argv[2];
         string dstportstart = argv[3];
@@ -102,10 +99,9 @@ int main(int argc, char* argv[])
 		GroupedRule requestedRule(prot, sps, spe, dps, dpe,ips1,ips2,ips3,ips4, prior, dir, act);
 		requestedRule.GenericSet(Field::ip4Lower,ips4);
 		requestedRule.GenericSet(Field::ip4Upper,ipe4);
-	
-		requestedRule.debugReturnEnglishRule();
+
         ifstream infile;
-        infile.open("Userlist");
+        infile.open("/home/tyron/BDDproject/BDDproject/Userlist");
         if(!infile)
         {
             return (int)response::noUserListFile;
@@ -118,7 +114,7 @@ int main(int argc, char* argv[])
             bool correctPassword = false;
             while(!infile.eof())
             {
-                infile >> _username >> _password >> _priority;
+                infile >> _username >> _priority >> _password;
                 if(username == _username)
                 {
                     userFound = true;
@@ -140,36 +136,74 @@ int main(int argc, char* argv[])
             
             else 
             {
-                string userFile = username + "-Rules-File.xml";
-                string adminFile = "Admin-Rules-File.xml";
 				
 				cout<<"made user and admin"<<endl;
-				AdminMachine admin;
-				
-				
-				UserMachine user(username);
-				if(username == "Admin")
+				AdminMachine admin;				
+				if(username == "Admin" && password == _password)
 				{
 					admin.addRule(requestedRule);
+					RangeHelper helper;
+					vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(requestedRule);
+					HTMLBuilder builder;
+					builder.allowedRules(expandedRequestedRule, username);
 				}
 				else
 				{
-					
-					vector<GroupedRule> temp = admin.ruleAllowed(username, password, requestedRule);
-					if(!temp.empty())
+					UserMachine user(username);
+					HTMLBuilder builder;
+					if(requestedRule.returnActionEnum() == Action::accept)
 					{
-						user.addRule(temp);
-						XMLParserIn parser(username);
-						vector<GroupedRule> inRules,outRules;
-						parser.buildInOutRules(inRules, outRules);
-						inRules.insert(inRules.end(), outRules.begin(), outRules.end());
-						builder.allowedRules(inRules, username);
+						vector<GroupedRule> temp = admin.ruleAllowed(username, password, requestedRule);
+						vector<GroupedRule> temp2;
+						if(!temp.empty())
+						{
+							user.addRule(temp);
+							for(auto i: temp)
+							{
+								RangeHelper helper;
+								vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(i);
+								vector<GroupedRule> temp;
+								for(auto k: expandedRequestedRule)
+								{
+									vector<string> tempstr = k.returnRangedBinRule();
+									for(auto j: tempstr)
+									{
+										GroupedRule tempGrule(i.returnDirection(), j, i.returnPriority(), i.returnActionEnum());
+										temp2.push_back(tempGrule);
+									}
+									tempstr.clear();
+								}
+							}
 						
+							builder.allowedRules(temp2, username);
+						}
+						else
+						{
+							vector<GroupedRule> emptyVec;
+							builder.allowedRules(emptyVec, username);
+							cout<<"no rules were allowed"<<endl;
+						}
 					}
-					else
-					{
-						builder.allowedRules(temp,username);
-					}
+						else
+						{
+							RangeHelper helper;
+							vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(requestedRule);
+							vector<GroupedRule> temp2;
+							for(auto i: expandedRequestedRule)
+							{
+								vector<string> temp = i.returnRangedBinRule();
+								for(auto j: temp)
+								{
+									GroupedRule tempGrule(requestedRule.returnDirection(), j, requestedRule.returnPriority(), requestedRule.returnActionEnum());
+									temp2.push_back(tempGrule);
+								}
+								temp.clear();
+							}
+							builder.allowedRules(temp2, username);
+							vector<GroupedRule> rr;
+							rr.push_back(requestedRule);
+							user.addRule(rr);
+						}
 				}
 				
                 return (int)response::builtRulesSuccessfully;

@@ -24,7 +24,6 @@ vector<GroupedRule> RuleReturner::returnRules()
 {
     startRuleReturn();
     populateGroupedRules();
-    cout << "rules.size() in RuleReturner before returning rules: " << rules.size() << endl;
     return gRules;
 }
 
@@ -220,10 +219,6 @@ void BDDit::appendRule(char _rule)
 void RuleReturner::populateGroupedRules()
 {
     TwoRanger ranger(rules);
-    for(auto i: rules)
-    {
-        cout<<i<<endl;
-    }
     rules = ranger.returnNewRules();
     
     for(auto i: rules)

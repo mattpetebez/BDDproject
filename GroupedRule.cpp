@@ -299,14 +299,34 @@ void GroupedRule::checkForTwoRange(int& upperBound, int& lowerBound, string& bin
 void GroupedRule::debugReturnEnglishRule()
 {
     cout << "Protocol: " << (int)protocol << " srcportrange: " << srcPortStart << "-" << srcPortEnd << " dstportrange: "
- << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << " Priority: "<< returnPriority()<<endl; 
+ << destPortStart << "-" << destPortEnd << " IP: " << returnWholeIP() << " Priority: "<< returnPriority()<<" Direction "<<(int)returnDirection()<<"Action"
+ <<returnAction()<<endl; 
 }
 
 string GroupedRule::returnHTMLRule()
 {
-    
+	string dir;
+    if(direction == Direction::in)
+	{
+		dir = "in";
+	}
+	else
+	{
+		dir = "out";
+	}
+	string act;
+	if(action == Action::accept)
+	{
+		act = "accept";
+	}
+	else
+	{
+		act = "drop";
+	}
+	
     string htmlRule =  "Protocol: " + returnProt() + " srcportrange: " + to_string(srcPortStart) + "-" + to_string(srcPortEnd) + " dstportrange: "
- + to_string(destPortStart) + "-" + to_string(destPortEnd) + " IP: " + returnWholeIP() + " Priority: " + to_string(returnPriority())+"\n";
+ + to_string(destPortStart) + "-" + to_string(destPortEnd) + " IP: " + returnWholeIP() + " Priority: " + to_string(returnPriority())+"\nDirection: "+
+ dir+" Action: "+act+"\n"; 
     return htmlRule;
  
 }

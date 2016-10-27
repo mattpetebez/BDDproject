@@ -71,99 +71,102 @@ XMLParserOut::~XMLParserOut()
 
 void XMLParserOut::ruleCreater()
 {
-    string wholerule = "";
+	if(!outRules.empty())
+	{
+		string wholerule = "";
 
-    string ruleaction = "<rule action='accept'";
-    
-	string prior =" priority=";
-    string priority="";
-	string direct = " direction=";
- 
-
-	string endrule= "</rule>";
-    string srcip = " srcipaddr=";
-    string dstip =" dstipaddr=";
-    string ip = "";
-    string protocol="";
-
-    string dstportstart = " dstportstart=";
-    string dstportend = " dstportend=";
-    string srcportstart = " srcportstart=";
-    string srcportend =" srcportend=";
-
-    /*
-     *  <rule action='accept' direction='in' priority='400'>
-        <tcp srcipaddr='196.44.24.27' dstipaddr='192.168.1.16' srcipmask='16' dstportstart='80' dstportend='100' srcportstart='80' srcportend='100'/>
-        </rule>
-     * iprange ??
-     */
-    vector<GroupedRule>::iterator iter = outRules.begin();
-    
-    while(iter != outRules.end())
-    {
-        GroupedRule currRule = (*iter);
+		string ruleaction = "<rule action='accept'";
 		
-		priority = prior + "'" +to_string(currRule.returnPriority())+"'";
-        if(iter->GenericReturn(Field::ip1Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip2Upper) != MASKED_VALUE
-        && iter->GenericReturn(Field::ip3Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip4Upper) != MASKED_VALUE)
-        {
-        ip = currRule.returnWholeIP();
-        if(currRule.returnDirection() == Direction::in)
-        {
-            ip = srcip + ip;
-        
-            direct += "'in'";
-            //cout<<"Direction "<<(int)currRule.returnDirection()<<endl;
-        }
-        else
-        {
-            ip = dstip + ip;
-            direct += "'out'";
-             //  cout<<"Direction "<<(int)currRule.returnDirection()<<endl;
-        }
-        }
-        else
-        {
-           if(currRule.returnDirection() == Direction::in)
-        {
-            direct += "'in'";
-        }
-        else
-        {
-            direct += "'out'";
-        } 
-        }
-        protocol=currRule.returnProt();
-        
-        string destportstart = "''";
-        if(iter->GenericReturn(Field::dstportstart) != MASKED_VALUE)
-        {
-         destportstart = "'"+to_string(iter->GenericReturn(Field::dstportstart))+"'";//currRule.returnDestPort();
-        }
-        string destportend = "''";
-        if(iter->GenericReturn(Field::dstportend) != MASKED_VALUE)
-        {
-         destportend = "'"+to_string(iter->GenericReturn(Field::dstportend))+"'";//no range implementation yet
-        }
-        string sourceportstart = "''"; 
-        if(iter->GenericReturn(Field::srcportend) != MASKED_VALUE)
-        {
-         sourceportstart = "'"+to_string(iter->GenericReturn(Field::srcportstart))+"'";//no range implementation yet
-        }
-        
-        string sourceportend = "''";//no range implementation yet
-        if(iter->GenericReturn(Field::srcportend) != MASKED_VALUE)
-        {
-        sourceportend = "'"+to_string(iter->GenericReturn(Field::srcportend))+"'";//no range implementation yet
-        }
-        
-        wholerule = ruleaction+direct+priority+">\n<"+protocol+ip+srcportstart+sourceportstart+srcportend+sourceportend+dstportstart+destportstart
-        +dstportend+destportend+"/"+">\n"+endrule;
-        xmlrules.push_back(wholerule);
-        
-        direct = " direction=";
-        ++iter;
-    }
+		string prior =" priority=";
+		string priority="";
+		string direct = " direction=";
+	 
+
+		string endrule= "</rule>";
+		string srcip = " srcipaddr=";
+		string dstip =" dstipaddr=";
+		string ip = "";
+		string protocol="";
+
+		string dstportstart = " dstportstart=";
+		string dstportend = " dstportend=";
+		string srcportstart = " srcportstart=";
+		string srcportend =" srcportend=";
+
+		/*
+		 *  <rule action='accept' direction='in' priority='400'>
+			<tcp srcipaddr='196.44.24.27' dstipaddr='192.168.1.16' srcipmask='16' dstportstart='80' dstportend='100' srcportstart='80' srcportend='100'/>
+			</rule>
+		 * iprange ??
+		 */
+		vector<GroupedRule>::iterator iter = outRules.begin();
+		
+		while(iter != outRules.end())
+		{
+			GroupedRule currRule = (*iter);
+			
+			priority = prior + "'" +to_string(currRule.returnPriority())+"'";
+			if(iter->GenericReturn(Field::ip1Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip2Upper) != MASKED_VALUE
+			&& iter->GenericReturn(Field::ip3Upper) != MASKED_VALUE && iter->GenericReturn(Field::ip4Upper) != MASKED_VALUE)
+			{
+			ip = currRule.returnWholeIP();
+			if(currRule.returnDirection() == Direction::in)
+			{
+				ip = srcip + ip;
+			
+				direct += "'in'";
+				//cout<<"Direction "<<(int)currRule.returnDirection()<<endl;
+			}
+			else
+			{
+				ip = dstip + ip;
+				direct += "'out'";
+				 //  cout<<"Direction "<<(int)currRule.returnDirection()<<endl;
+			}
+			}
+			else
+			{
+			   if(currRule.returnDirection() == Direction::in)
+			{
+				direct += "'in'";
+			}
+			else
+			{
+				direct += "'out'";
+			} 
+			}
+			protocol=currRule.returnProt();
+			
+			string destportstart = "''";
+			if(iter->GenericReturn(Field::dstportstart) != MASKED_VALUE)
+			{
+			 destportstart = "'"+to_string(iter->GenericReturn(Field::dstportstart))+"'";//currRule.returnDestPort();
+			}
+			string destportend = "''";
+			if(iter->GenericReturn(Field::dstportend) != MASKED_VALUE)
+			{
+			 destportend = "'"+to_string(iter->GenericReturn(Field::dstportend))+"'";//no range implementation yet
+			}
+			string sourceportstart = "''"; 
+			if(iter->GenericReturn(Field::srcportend) != MASKED_VALUE)
+			{
+			 sourceportstart = "'"+to_string(iter->GenericReturn(Field::srcportstart))+"'";//no range implementation yet
+			}
+			
+			string sourceportend = "''";//no range implementation yet
+			if(iter->GenericReturn(Field::srcportend) != MASKED_VALUE)
+			{
+			sourceportend = "'"+to_string(iter->GenericReturn(Field::srcportend))+"'";//no range implementation yet
+			}
+			
+			wholerule = ruleaction+direct+priority+">\n<"+protocol+ip+srcportstart+sourceportstart+srcportend+sourceportend+dstportstart+destportstart
+			+dstportend+destportend+"/"+">\n"+endrule;
+			xmlrules.push_back(wholerule);
+			
+			direct = " direction=";
+			++iter;
+		}
+	}
 } 
 
 void XMLParserOut::printoutputRule(string& username)
@@ -172,10 +175,13 @@ void XMLParserOut::printoutputRule(string& username)
 	if (xmlOutputRules.is_open())
 	{
 		xmlOutputRules << "<filter name='"+username+"-rules' chain='root'>\n";
+		if(!xmlrules.empty())
+		{
         for(auto i: xmlrules)
         {
             xmlOutputRules <<"\t" << i << "\n";
         }
+		}
         xmlOutputRules << "<rule action='reject' direction='inout' priority='100'/>\n";
         xmlOutputRules << "</filter>";
 		xmlOutputRules.close();

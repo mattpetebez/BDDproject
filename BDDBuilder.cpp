@@ -10,10 +10,9 @@ BDDBuilder::~BDDBuilder()
 {
 }
 
-void BDDBuilder::buildBDD()
+bool BDDBuilder::buildBDD()
 {
     vector<GroupedRule>::iterator rulesIter = inRules.begin();
-    
     string::iterator ruleCharIter;
     DdNode* curr, *var, *tmp, *temp;
     int count =0;
@@ -92,6 +91,15 @@ void BDDBuilder::buildBDD()
         }
         ++rulesIter;
     }
+	
+	if(Cudd_CountPathsToNonZero(mainBdd) == 0)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 void BDDBuilder::printBDD(string& filename)

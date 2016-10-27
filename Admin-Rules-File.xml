@@ -2,38 +2,5 @@
 	<rule action='accept' direction='in' priority='500'>
 <tcp srcipaddr='196.44.24.10' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
 </rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.10' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.11' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.12' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.13' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.14' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.15' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.16' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.17' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.18' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.19' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.20' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
 <rule action='reject' direction='inout' priority='100'/>
 </filter>

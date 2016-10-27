@@ -29,7 +29,6 @@ AdminMachine::~AdminMachine()
     }
 	
 //    
-
 	XMLParserOut out;
     out.parseOutGroupedRules(inoutRules, username);
 }
@@ -46,44 +45,59 @@ bool AdminMachine::addRule(GroupedRule& _rule)
         if(_rule.returnDirection() == Direction::in)
         {
             //inRules.push_back(_rule);
-            RangeHelper helper;
-            vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(_rule);
-            for(auto i: expandedRequestedRule)
-            {
-                vector<string> temp = i.returnRangedBinRule();
-                for(auto j: temp)
-                {
-                    GroupedRule tempGrule(_rule.returnDirection(), j, _rule.returnPriority(), _rule.returnActionEnum());
-                    inRules.push_back(tempGrule);
-                }
-                temp.clear();
-            }
-			//removeCopies(inRules);
-            auto tempVec = groupByPriority(inRules);			
-            removeRedundancy(tempVec);
-            inRules = rebuildRules(tempVec);
-            return true;
+				if(inRules.empty() && _rule.returnActionEnum() == Action::deny)
+				{
+					return false;
+				}
+				else
+				{
+					RangeHelper helper;
+					vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(_rule);
+					for(auto i: expandedRequestedRule)
+					{
+						vector<string> temp = i.returnRangedBinRule();
+						for(auto j: temp)
+						{
+							GroupedRule tempGrule(_rule.returnDirection(), j, _rule.returnPriority(), _rule.returnActionEnum());
+							inRules.push_back(tempGrule);
+						}
+						temp.clear();
+					}
+		//			  removeCopies(inRules);
+						  auto tempVec = groupByPriority(inRules);
+						  removeRedundancy(tempVec);
+						  inRules = rebuildRules(tempVec);
+					  
+					return true;
+				}
         }
         else 
         {
            // outRules.push_back(_rule);
 			//removeCopies(outRules);
-               RangeHelper helper;
-               vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(_rule);
-               for(auto i: expandedRequestedRule)
-               {
-                    vector<string> temp = i.returnRangedBinRule();
-                    for(auto j: temp)
-                    {
-                        GroupedRule tempGrule(_rule.returnDirection(), j, _rule.returnPriority(), _rule.returnActionEnum());
-                        outRules.push_back(tempGrule);
-                    }
-                    temp.clear();
-            }
-            auto tempVec = groupByPriority(outRules);
-            removeRedundancy(tempVec);
-            outRules = rebuildRules(tempVec);	
-            return true;
+			   if(outRules.empty() && _rule.returnActionEnum() == Action::deny)
+				{
+					return false;
+				}
+				else
+				{
+					   RangeHelper helper;
+					   vector<GroupedRule> expandedRequestedRule = helper.returnRangedRules(_rule);
+					   for(auto i: expandedRequestedRule)
+					   {
+							vector<string> temp = i.returnRangedBinRule();
+							for(auto j: temp)
+							{
+								GroupedRule tempGrule(_rule.returnDirection(), j, _rule.returnPriority(), _rule.returnActionEnum());
+								outRules.push_back(tempGrule);
+							}
+							temp.clear();
+						}
+						auto tempVec = groupByPriority(outRules);
+						removeRedundancy(tempVec);
+						outRules = rebuildRules(tempVec);	
+						return true;
+				}
         }
     }
 }
@@ -144,10 +158,26 @@ void AdminMachine::reduceUsingBDD(vector<GroupedRule>& rules)
     }
 	else
 	{
+
 		BDDBuilder BDDin(rules);
-		BDDin.buildBDD();
-		RuleReturner inRuleReturner(BDDin.returnHead(), Direction::in, rules.at(0).returnPriority());
-		rules = inRuleReturner.returnRules();
+		if(BDDin.buildBDD())
+		{
+			RuleReturner inRuleReturner(BDDin.returnHead(), rules.at(0).returnDirection(), rules.at(0).returnPriority());
+			rules = inRuleReturner.returnRules();
+		}
+		else
+		{
+			
+			if(rules.at(0).returnDirection() == Direction::in)
+			{
+				inRules.clear();
+			}
+			else
+			{
+				outRules.clear();
+			}
+			rules.clear();
+		}
 	}
 }
 vector<GroupedRule> AdminMachine::rebuildRules(vector<vector<GroupedRule>>& rules)
@@ -299,7 +329,7 @@ bool AdminMachine::groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2)
 vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, GroupedRule _rule)
 {
     ifstream infile;
-    infile.open("Userlist");
+    infile.open("/home/tyron/BDDproject/BDDproject/Userlist");
     vector<GroupedRule> exceptedRules;
     if(!infile)
     {
@@ -329,17 +359,13 @@ vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, Grou
         }
         else
         {
-			cout<<"Unexceptable about to be popultated"<<endl;
             vector<GroupedRule> UnExceptable;
 
             UnExceptable = populateUnExceptable(_rule.returnDirection(), priority);
-			
-			cout<<"Unexceptable popultated"<<endl;
-			
+						
             BDDnavigator navigator(_rule,UnExceptable);
 						
             exceptedRules = navigator.returnExceptedRules();
-            cout<<"Navigator finished"<<endl;
         }
         
         return exceptedRules;

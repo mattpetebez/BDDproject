@@ -15,7 +15,7 @@ class BDDBuilder
 {
 public:
     BDDBuilder(vector<GroupedRule> &binRules);
-    void buildBDD();
+    bool buildBDD();
     ~BDDBuilder();
     void printBDD(string& filename);
     DdNode* returnHead();
