@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 		requestedRule.GenericSet(Field::ip4Upper,ipe4);
 
         ifstream infile;
-        infile.open("/home/tyron/BDDproject/BDDproject/Userlist");
+        infile.open("Userlist");
         if(!infile)
         {
             return (int)response::noUserListFile;
@@ -136,8 +136,6 @@ int main(int argc, char* argv[])
             
             else 
             {
-				
-				cout<<"made user and admin"<<endl;
 				AdminMachine admin;				
 				if(username == "Admin" && password == _password)
 				{
@@ -181,7 +179,6 @@ int main(int argc, char* argv[])
 						{
 							vector<GroupedRule> emptyVec;
 							builder.allowedRules(emptyVec, username);
-							cout<<"no rules were allowed"<<endl;
 						}
 					}
 						else

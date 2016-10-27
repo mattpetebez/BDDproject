@@ -2,7 +2,7 @@
 
 XMLParserIn::XMLParserIn(string& _filename)
 {
-    filename = "/home/tyron/"+_filename  ;
+    filename = _filename  ;
 //    cout << "Filename: " << filename << endl;
 }
 

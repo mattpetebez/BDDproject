@@ -21,7 +21,7 @@ public:
     vector <GroupedRule> returnExceptedRules();
 private:
     void traverseTilEqual(string& _binRule, BDDit& _curr, string::iterator& _binIter);
-    void initialise();
+    bool initialise();
     void findBinExceptedRules();
     void reducedFoundExceptedRules();
     void buildReturnableExceptedRules();

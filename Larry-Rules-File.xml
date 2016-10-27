@@ -1,24 +1,27 @@
 <filter name='Larry-rules' chain='root'>
-	<rule action='accept' direction='in' priority='400'>
-<tcp srcipaddr='196.44.24.3' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='in' priority='400'>
-<tcp srcipaddr='196.44.24.7' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
+	<rule action='accept' direction='in' priority='500'>
+<tcp srcipaddr='1.1.1.2' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
 </rule>
 	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.21' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
+<tcp dstipaddr='1.1.1.2' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
+</rule>
+	<rule action='accept' direction='in' priority='500'>
+<tcp srcipaddr='1.1.1.3' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
 </rule>
 	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.22' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
+<tcp dstipaddr='1.1.1.3' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
+</rule>
+	<rule action='accept' direction='in' priority='500'>
+<tcp srcipaddr='1.1.1.4' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
 </rule>
 	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.23' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
+<tcp dstipaddr='1.1.1.4' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
+</rule>
+	<rule action='accept' direction='in' priority='500'>
+<tcp srcipaddr='1.1.1.5' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
 </rule>
 	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.24' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
-</rule>
-	<rule action='accept' direction='out' priority='500'>
-<tcp dstipaddr='196.44.24.25' srcportstart='80' srcportend='80' dstportstart='80' dstportend='80'/>
+<tcp dstipaddr='1.1.1.5' srcportstart='1' srcportend='1' dstportstart='1' dstportend='1'/>
 </rule>
 <rule action='reject' direction='inout' priority='100'/>
 </filter>

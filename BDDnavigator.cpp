@@ -10,8 +10,9 @@ BDDnavigator::~BDDnavigator()
 {
 }
 
-void BDDnavigator::initialise()
+bool BDDnavigator::initialise()
 {
+	bool bddbuilt=false;
     RangeHelper helper;
     expandedRequestedRule = helper.returnRangedRules(requestedRule);
     
@@ -22,10 +23,15 @@ void BDDnavigator::initialise()
         temp.clear();
     }
     
-    BDDBuilder unExceptableRulesBDD(unExceptableRules);
-    unExceptableRulesBDD.buildBDD();
+	if(!unExceptableRules.empty())
+	{
+		BDDBuilder unExceptableRulesBDD(unExceptableRules);
+		bddbuilt = unExceptableRulesBDD.buildBDD();
 
-    head = unExceptableRulesBDD.returnHead();    
+		head = unExceptableRulesBDD.returnHead();    
+	}
+	
+	return bddbuilt;
 
 }
 
@@ -147,8 +153,10 @@ void BDDnavigator::buildReturnableExceptedRules()
 
 vector <GroupedRule> BDDnavigator::returnExceptedRules()
 {
-    initialise();
+    if(initialise())
+	{
     findBinExceptedRules();
     buildReturnableExceptedRules();
+	}
     return returnableExceptedRules;
 }

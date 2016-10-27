@@ -329,7 +329,7 @@ bool AdminMachine::groupedRuleEquivalence(GroupedRule rule1, GroupedRule rule2)
 vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, GroupedRule _rule)
 {
     ifstream infile;
-    infile.open("/home/tyron/BDDproject/BDDproject/Userlist");
+    infile.open("Userlist");
     vector<GroupedRule> exceptedRules;
     if(!infile)
     {
@@ -364,25 +364,11 @@ vector<GroupedRule> AdminMachine::ruleAllowed(string user, string password, Grou
             UnExceptable = populateUnExceptable(_rule.returnDirection(), priority);
 						
             BDDnavigator navigator(_rule,UnExceptable);
-						
+//						
             exceptedRules = navigator.returnExceptedRules();
         }
         
         return exceptedRules;
-    
-//    BDDnavigator navigator(_rule, UnExceptable);
-//    vector<GroupedRule> acceptedExceptions = navigator.returnExceptions();
-//    BDDnavigator navigator();
-//    acceptedExceptions = navigator.returnExceptions();
-//    
-//    cout<<"Your requested rule: "<<_rule<<endl;
-//    cout<<"The accepted rules are as follows: "<<endl;
-//    for(auto i: acceptedExceptions)
-//    {
-//        i.debugReturnEnglishRule();
-//    }
-//    
-//    }
 }
 }
 
